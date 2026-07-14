@@ -4,6 +4,32 @@ Decisions recorded here are product source of truth, alongside `docs/00_PROJECT/
 
 ---
 
+## 2026-07-14 — Milestone 1: schema + walking skeleton (Session 4)
+
+The complete assessment loop, end to end: anonymous-first start → seeded randomized runner with autosave → server-side scoring → claim gate → results page.
+
+- **Scoring engine** (`src/core/scoring/`): pure, product-agnostic (Decision 16). Per-session normalization (§11.1), signature-affinity personas with primary + secondary (§11.2), volume × consistency × coverage confidence (Decision 5). Config Zod-validated from `scoring_configs.config`.
+- **Selection engine** (`src/core/selection/`): fixed/random strategies, seeded deterministic shuffle — resume reproduces exact question and option order.
+- **Migrations** (5 files): all MVP tables with RLS in the same file as each table. Highlights: `option_signals`/`scoring_configs`/`events` have zero client-role policies; the Decision-1 result gate is enforced _in RLS_ (`is_permanent_user()`); role claims sync to JWT app_metadata via trigger (no dashboard auth-hook config needed); `claim_session()` is an atomic SECURITY DEFINER function, service-role only.
+- **Seed**: 8 competencies, 24 traits, 5 personas, scoring config v1 (Decision 15 signatures), the `aiq` assessment, and 8 authored scenario questions with 62 behavioral signals.
+- **Assessment feature**: start (creates anonymous identity transparently), autosave upsert with served-option validation, idempotent submit that scores server-side and returns no scores to the client, claim-token minting for anonymous users.
+- **Claim flow**: in-place anonymous conversion (`updateUser`) + cross-account re-parenting via claim cookie → `claim_session()` RPC. Hostile-path unit tests included.
+- **Raw results page** (Milestone 3 owns the polish): persona, overall, competency bars, strengths/blind spots, confidence level.
+- Tests: engine (19), selection (5), sanitization leak-guard (3), claim (5), plus foundation tests.
+
+Verification note: everything runnable without a database is verified locally; migration/RLS/end-to-end verification requires the cloud Supabase project (see Session-4 summary for the exact steps and required credentials). `supabase/tests/rls_verification.sql` automates the RLS checks.
+
+---
+
+## 2026-07-14 — Founder Decisions (Session 4): Milestone 0 approved
+
+13. **Supabase** — cloud project, production-like development from the start (no local Docker stack).
+14. **GitHub** — founder creates the repository manually; Claude must not create it.
+15. **Persona signatures** — ASSESSMENT_MODEL §5.4 draft accepted as **Version 1**; do not delay implementation perfecting the model; signatures remain configuration, evolve from real user data post-launch. (Closes OPEN_QUESTIONS item A.)
+16. **Engineering principle** — build **reusable engines**, not AIQ-specific implementations, wherever practical; the assessment engine must support multiple assessment products without major refactoring.
+
+---
+
 ## 2026-07-14 — Milestone 0: project foundation (Session 3)
 
 Implementation began. Git repo initialized; Next.js 16 (App Router) + TypeScript strict + Tailwind v4 + shadcn/ui + Supabase clients + Zod env validation + Vitest + GitHub Actions CI. Full route-group skeleton with auth scaffold (login/signup/reset via server actions), layer-boundary ESLint enforcement, design tokens (light/dark), and `.claude/launch.json` for local preview.

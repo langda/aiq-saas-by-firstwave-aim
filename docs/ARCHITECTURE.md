@@ -33,6 +33,8 @@ Data layer (features/*/server/db.ts) — the only place that touches Supabase
 
 **Rule: dependencies point downward only.** `core/` imports nothing from the app. UI never imports the data layer directly. This is the "clean architecture" requirement translated into something enforceable (via ESLint import rules).
 
+**Rule: reusable engines, not AIQ-specific implementations (Decision 16).** `core/` knows nothing about AIQ's particular competencies, personas, or questions — everything is keyed by ids/slugs supplied through configuration and data. The scoring, selection, and confidence engines must be able to power a different assessment product by swapping content and config alone.
+
 ### 1.2 System context
 
 ```mermaid

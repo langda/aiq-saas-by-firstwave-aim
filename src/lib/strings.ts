@@ -43,9 +43,35 @@ export const strings = {
     emptyAction: "Start the assessment",
   },
   assessment: {
-    placeholderTitle: "The assessment is being built",
-    placeholderBody:
-      "The assessment engine arrives in Milestone 1. This route is reserved for it.",
+    introNote:
+      "No account needed. Takes about 3 minutes. No right answers — answer honestly.",
+    start: "Begin",
+    startError: "Could not start the assessment. Please try again.",
+  },
+  runner: {
+    back: "Back",
+    submit: "See my results",
+    answered: "answered",
+  },
+  claim: {
+    title: "Your results are ready",
+    subtitle: "Create your free account to see your AI work style profile.",
+    convertAction: "Create account & see results",
+    haveAccount: "Already have an account? Sign in to attach these results",
+    continueAction: "View my results",
+    continueTitle: "Welcome back",
+    continueSubtitle: "Your assessment is complete.",
+  },
+  results: {
+    title: "Your results",
+    overall: "Overall score",
+    persona: "Your AI work style",
+    competencies: "Competency profile",
+    strengths: "Strengths",
+    blindSpots: "Blind spots",
+    confidence: "Profile confidence",
+    confidenceLow: "We need more information to build an accurate profile.",
+    notMeasured: "Not measured",
   },
   admin: {
     title: "Admin",

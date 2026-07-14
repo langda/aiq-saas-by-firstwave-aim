@@ -9,8 +9,7 @@
 
 ## Open
 
-**A. ⛔ Persona signature profiles — sign off on the draft values.**
-The persona _philosophy_ is decided (work styles, primary + secondary — Decision 3) and the affinity model is designed (ARCHITECTURE §11.2). What remains is the content: the draft signature vectors and the single Architect gate in [ASSESSMENT_MODEL.md §5.4](./ASSESSMENT_MODEL.md). These determine who gets called what — pure product judgment. Blocks Milestone 1 exit (first correctly-assigned persona). Also sign off the draft trait taxonomy (§3.2) — cheaper to rename traits before questions are tagged with them.
+**A. ~~Persona signature profiles~~ — RESOLVED (Decision 15, 2026-07-14).** ASSESSMENT_MODEL §5.4 signatures and the §3.2 trait taxonomy are accepted as Version 1, shipped as configuration, to be calibrated against real user data post-launch.
 
 **B. ⚠️ Confirm the normalization + confidence numbers at Phase 4 exit.**
 The formulas are consistent with Decision 4/5 and documented (ARCHITECTURE §11.1, §11.3; ASSESSMENT_MODEL §8). Before Milestone 1 closes, review real scored examples: do the overall scores and confidence levels _feel_ right on 8 questions? Parameters (competency weights in the overall, confidence component weights, K) are config — tuning needs no deploy, but the defaults need your eyes.
