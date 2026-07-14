@@ -22,13 +22,13 @@ Assessments, Gallup Strengths, and Linear.
 
 ## MVP Scope
 
--   Landing page
--   Assessment
--   Results
--   Certificate
--   User login
--   Admin portal
--   Analytics
+- Landing page
+- Assessment
+- Results
+- Certificate
+- User login
+- Admin portal
+- Analytics
 
 ## User Journey
 
@@ -41,23 +41,23 @@ Result Certificate
 
 ## Competencies
 
--   Curiosity
--   Problem Solving
--   Decision Making
--   Learning Agility
--   Efficiency
--   Workflow Design
--   Judgment
--   Vision
+- Curiosity
+- Problem Solving
+- Decision Making
+- Learning Agility
+- Efficiency
+- Workflow Design
+- Judgment
+- Vision
 
 ## Assessment Rules
 
--   Default assessment: 8 questions
--   Randomize question order
--   Randomize answer order
--   Hidden competency weighting
--   Overall score normalized to 100
--   Persona assigned from competency profile
+- Default assessment: 8 questions
+- Randomize question order
+- Randomize answer order
+- Hidden competency weighting
+- Overall score normalized to 100
+- Persona assigned from competency profile
 
 ## Personas
 
@@ -75,14 +75,14 @@ OpenAI Vercel
 
 ## Coding Standards
 
--   Clean architecture
--   Reusable components
--   Strong typing
--   No duplicated business logic
--   Mobile first
--   Accessibility
--   Server-side validation
--   Row Level Security
+- Clean architecture
+- Reusable components
+- Strong typing
+- No duplicated business logic
+- Mobile first
+- Accessibility
+- Server-side validation
+- Row Level Security
 
 ## Roadmap
 

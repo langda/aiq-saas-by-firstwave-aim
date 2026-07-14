@@ -53,7 +53,7 @@ The single most sensitive invariant in this product: **hidden scoring weights mu
 - Question payloads sent to the assessment runner contain **only** `{ id, title, scenario, options: [{ id, content }] }`. No weights, no competency ids, no "correct" markers.
 - Scoring runs **exclusively on the server** at submit time. The client submits `{ questionId, optionId }` pairs; it never computes or sees a partial score.
 - RLS denies all client-role access to `option_signals`, `traits`, `scoring_configs`, and persona configuration. Only the server (service role / server-side authenticated queries through a dedicated view) reads them. RLS is the backstop; the primary control is that no client code path selects those tables.
-- **Anonymous users are still authenticated users** (Supabase anonymous sign-ins), so every session row has a real `user_id` and every RLS policy applies unchanged. Anonymity changes *what they can see* (no results until account creation — Decision 1), not the trust model.
+- **Anonymous users are still authenticated users** (Supabase anonymous sign-ins), so every session row has a real `user_id` and every RLS policy applies unchanged. Anonymity changes _what they can see_ (no results until account creation — Decision 1), not the trust model.
 
 ---
 
@@ -94,12 +94,12 @@ Each group has its own `layout.tsx` (marketing shell vs. app shell vs. admin she
 
 ### 3.1 Where server logic lives
 
-| Concern | Mechanism |
-|---|---|
-| Reads for pages | RSC → feature service → data layer |
-| Authenticated mutations | **Server Actions** → feature service |
-| Public/uncookied APIs (cert verification JSON, OG image, webhooks) | **Route Handlers** (`app/api/`) |
-| Post-response work (AI generation, emails) | `waitUntil` in MVP; jobs table later (§16) |
+| Concern                                                            | Mechanism                                  |
+| ------------------------------------------------------------------ | ------------------------------------------ |
+| Reads for pages                                                    | RSC → feature service → data layer         |
+| Authenticated mutations                                            | **Server Actions** → feature service       |
+| Public/uncookied APIs (cert verification JSON, OG image, webhooks) | **Route Handlers** (`app/api/`)            |
+| Post-response work (AI generation, emails)                         | `waitUntil` in MVP; jobs table later (§16) |
 
 Server Actions and Route Handlers are **thin transport adapters**: parse/validate input (Zod), check auth, call the service, shape the response. All business logic lives in services so it is testable without HTTP and reusable across transports. This is what keeps us honest when V3+ needs a real public API (§8.3).
 
@@ -225,12 +225,12 @@ sequenceDiagram
 ```
 
 - **New users** (the common path): Supabase converts the anonymous user in place — `updateUser({ email, password })` or `linkIdentity()` for OAuth. The `user_id` never changes, so sessions, responses, and the already-computed result are attached with **zero data movement**.
-- **Existing users** who log in instead of signing up get a *different* `user_id`; a server-side `claimSessions` service re-parents the anonymous user's rows to the real account in one transaction (service-role client, after verifying the caller held the anonymous session), then deletes the orphaned anonymous user. This is the one genuinely fiddly part of Decision 1 and gets its own service tests.
+- **Existing users** who log in instead of signing up get a _different_ `user_id`; a server-side `claimSessions` service re-parents the anonymous user's rows to the real account in one transaction (service-role client, after verifying the caller held the anonymous session), then deletes the orphaned anonymous user. This is the one genuinely fiddly part of Decision 1 and gets its own service tests.
 - **The result gate**: `submitAssessment` computes and persists the result but responds only with `{ status: "complete", resultId }`. The results page requires a permanent account (`is_anonymous = false` in the JWT); anonymous holders are routed to the signup gate ("Create your free account to see your results"). Scores never transit to an anonymous client.
 
 ### 5.2 Mechanics
 
-- **Middleware** refreshes the session token on every request. Gating: `assessment/*` allows anonymous auth (and silently creates it if missing); `(app)` requires a permanent account; `(admin)` requires a permanent account + role check in the layout. Middleware does *coarse* gating only; **role checks happen in layouts and services**, never solely in middleware.
+- **Middleware** refreshes the session token on every request. Gating: `assessment/*` allows anonymous auth (and silently creates it if missing); `(app)` requires a permanent account; `(admin)` requires a permanent account + role check in the layout. Middleware does _coarse_ gating only; **role checks happen in layouts and services**, never solely in middleware.
 - **Custom claims**: a Supabase Auth Hook stamps `role` and `org_id` into the JWT (`is_anonymous` is provided by Supabase natively) so RLS policies can use `auth.jwt()` without joins. Role changes take effect on next token refresh (≤1h); admin demotion can force sign-out.
 - Password reset via Supabase's built-in email flow; email templates customized to match brand.
 - **Abuse control for anonymous starts**: rate-limit `signInAnonymously` + session-start per IP (also protects the question bank from scraping via repeated anonymous sessions); CAPTCHA on anonymous sign-in is a Supabase toggle we can enable without code changes if abuse appears.
@@ -242,14 +242,14 @@ sequenceDiagram
 
 Four roles (from IMPLEMENTATION_PLAN Phase 2), one enum, escalating scope:
 
-| Capability | user | trainer | org_admin | super_admin |
-|---|---|---|---|---|
-| Take assessments, view own results/certs | ✅ | ✅ | ✅ | ✅ |
-| View **aggregate** org analytics | — | ✅ | ✅ | ✅ |
-| View individual member results | — | org-policy gated | org-policy gated | ✅ |
-| Manage org members, org branding | — | — | ✅ (own org) | ✅ |
-| Manage questions, competencies, personas, scoring | — | — | — | ✅ |
-| Platform analytics, all orgs | — | — | — | ✅ |
+| Capability                                        | user | trainer          | org_admin        | super_admin |
+| ------------------------------------------------- | ---- | ---------------- | ---------------- | ----------- |
+| Take assessments, view own results/certs          | ✅   | ✅               | ✅               | ✅          |
+| View **aggregate** org analytics                  | —    | ✅               | ✅               | ✅          |
+| View individual member results                    | —    | org-policy gated | org-policy gated | ✅          |
+| Manage org members, org branding                  | —    | —                | ✅ (own org)     | ✅          |
+| Manage questions, competencies, personas, scoring | —    | —                | —                | ✅          |
+| Platform analytics, all orgs                      | —    | —                | —                | ✅          |
 
 Per Decision 9, **aggregate-only is the default** for org staff; individual result visibility is an explicit org-level policy (`organizations.settings.individualResultsVisible`, default `false`), and RLS policies for org reads check it. Privacy-by-default is a stated competitive advantage — the policy flag is enforced in the database, not just hidden in the UI.
 
@@ -296,11 +296,11 @@ supabase/
 
 ### 8.2 Public route handlers (MVP)
 
-| Endpoint | Purpose |
-|---|---|
-| `GET /verify/[code]` | Human-readable certificate verification page (public) |
+| Endpoint                       | Purpose                                                     |
+| ------------------------------ | ----------------------------------------------------------- |
+| `GET /verify/[code]`           | Human-readable certificate verification page (public)       |
 | `GET /api/certificates/[code]` | JSON verification (for programmatic checks / QR deep links) |
-| `GET /api/og/result/[shareId]` | OG share image (Satori/`next/og`) |
+| `GET /api/og/result/[shareId]` | OG share image (Satori/`next/og`)                           |
 
 Public endpoints get **rate limiting** (Upstash or Vercel firewall rules) and return minimal data (§15).
 
@@ -314,13 +314,13 @@ Because all logic lives in services, exposing a versioned REST API for enterpris
 
 Deliberately minimal:
 
-| State | Where it lives |
-|---|---|
-| Server data (results, dashboards, admin lists) | RSC props — the server is the cache |
+| State                                                   | Where it lives                                                                                                                   |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Server data (results, dashboards, admin lists)          | RSC props — the server is the cache                                                                                              |
 | Assessment runner (current question, answers, progress) | One client-side `useReducer` state machine + autosave to server; **server is authoritative** — refresh/resume rehydrates from DB |
-| Forms (auth, admin editors) | `react-hook-form` + Zod resolvers |
-| Theme | CSS variables + cookie |
-| URL-worthy state (admin filters, pagination) | Search params |
+| Forms (auth, admin editors)                             | `react-hook-form` + Zod resolvers                                                                                                |
+| Theme                                                   | CSS variables + cookie                                                                                                           |
+| URL-worthy state (admin filters, pagination)            | Search params                                                                                                                    |
 
 **No Redux, no Zustand, no TanStack Query in MVP.** Each would be a solution looking for a problem given RSC + server actions. If client-side data caching needs emerge in the admin CMS (Phase 7), TanStack Query is the pre-approved addition — nothing else.
 
@@ -398,7 +398,7 @@ Definition (consistent with Decision 4's hierarchy; final numeric confirmation a
 - **Overall** = weighted mean of non-null competency scores; competency weights come from `scoring_configs.config` (equal by default). Not hardcoded, per PROJECT_RULES.
 - **Strengths** = top-N competencies above a configurable threshold; **blind spots** = bottom-N below one. N and thresholds live in config.
 
-This definition is robust to variable question sets (essential once selection is randomized or adaptive) — each session is normalized against *its own* maximum.
+This definition is robust to variable question sets (essential once selection is randomized or adaptive) — each session is normalized against _its own_ maximum.
 
 ### 11.2 Persona assignment — signature-profile affinity, not score ranges
 
@@ -412,11 +412,23 @@ Per Decision 3, personas are **work styles**, not score bands. The Session-1 thr
 // scoring_configs.config.personas (illustrative shape, not final values)
 {
   "signatures": [
-    { "persona": "ai-architect", "profile": { "vision": 1.0, "workflow-design": 0.8, "judgment": 0.7, "decision-making": 0.6 }, "gates": { "overallGte": 60 } },
-    { "persona": "explorer",     "profile": { "curiosity": 1.0, "learning-agility": 0.7 } }
+    {
+      "persona": "ai-architect",
+      "profile": {
+        "vision": 1.0,
+        "workflow-design": 0.8,
+        "judgment": 0.7,
+        "decision-making": 0.6,
+      },
+      "gates": { "overallGte": 60 },
+    },
+    {
+      "persona": "explorer",
+      "profile": { "curiosity": 1.0, "learning-agility": 0.7 },
+    },
   ],
   "secondary": { "minAffinity": 0.55, "display": false },
-  "fallback": "explorer"
+  "fallback": "explorer",
 }
 ```
 
@@ -428,7 +440,7 @@ Resolved by Decision 5: confidence measures **how much the assessment itself can
 2. **Consistency** — 1 − normalized dispersion of repeated signals per competency (contradictory picks lower it).
 3. **Coverage** — fraction of competencies with ≥ K signals in the served set.
 
-Displayed in results as a qualitative level (High / Moderate / Low), not a raw number; the Low-state copy is fixed by Decision 5: *"We need more information to build an accurate profile"* — paired with the upsell path to longer assessments (Decision 8). Component weights and K are config, so recalibration as the question bank grows requires no deploy.
+Displayed in results as a qualitative level (High / Moderate / Low), not a raw number; the Low-state copy is fixed by Decision 5: _"We need more information to build an accurate profile"_ — paired with the upsell path to longer assessments (Decision 8). Component weights and K are config, so recalibration as the question bank grows requires no deploy.
 
 ### 11.4 Reproducibility
 
@@ -443,7 +455,7 @@ Per AI Rules: **AI generates recommendations, never scores.** The scoring pipeli
 - **Trigger**: after a result is persisted, fire generation via `waitUntil` (post-response). Results page renders instantly with score/persona/chart; the recommendations panel shows a "generating" state and polls (or refreshes) until `ai_recommendations.status = generated`.
 - **Fallback is mandatory**: a static, admin-editable recommendation library keyed by (persona × weakest competencies). If the LLM call fails or times out, users still get their "three recommended actions." AI failure must never degrade the core result experience.
 - **Provider abstraction**: `lib/ai/` exposes `generateRecommendations(input): Promise<Recommendations>`. **OpenAI is the default provider (Decision 10)**; the adapter contract is provider-agnostic, so adding Anthropic (or any other) is a single new file in `lib/ai/providers/` plus a config switch — no call-site changes. Model name, temperature, and prompt version are recorded on every generation.
-- **Prompts centralized** in `lib/ai/prompts/` — versioned exports, never inline strings. Input to the prompt is the *result summary* (scores, persona, strengths/blind spots), never raw responses and **never the hidden weights**.
+- **Prompts centralized** in `lib/ai/prompts/` — versioned exports, never inline strings. Input to the prompt is the _result summary_ (scores, persona, strengths/blind spots), never raw responses and **never the hidden weights**.
 - **Structured output**: the model returns JSON matching a Zod schema (three actions: title, why, how). Parse-or-fallback; no free-text rendering of unvalidated model output.
 - Output stored in `ai_recommendations` with `status` and `reviewed_by` — reviewable and replaceable, per AI Rules.
 
@@ -499,13 +511,13 @@ Privacy stance (Decision 9): org staff see **aggregates only by default**; membe
 
 ## 17. Deployment Architecture
 
-| Environment | App | Database | Purpose |
-|---|---|---|---|
-| Local | `next dev` | Supabase CLI (local Docker) | day-to-day dev, migrations authored here |
-| Preview | Vercel preview (per PR) | Supabase **branch DB** (or shared staging) | review with real data shape |
-| Production | Vercel prod | Supabase prod project | users |
+| Environment | App                     | Database                                   | Purpose                                  |
+| ----------- | ----------------------- | ------------------------------------------ | ---------------------------------------- |
+| Local       | `next dev`              | Supabase CLI (local Docker)                | day-to-day dev, migrations authored here |
+| Preview     | Vercel preview (per PR) | Supabase **branch DB** (or shared staging) | review with real data shape              |
+| Production  | Vercel prod             | Supabase prod project                      | users                                    |
 
-- **CI (GitHub Actions)**: typecheck → lint → unit tests (core/ especially) → build → migration dry-run. Merges to `main` auto-deploy; migrations applied via CI step (`supabase db push` against the linked project) *before* the app deploy that depends on them. Backward-compatible migrations only (expand → migrate → contract).
+- **CI (GitHub Actions)**: typecheck → lint → unit tests (core/ especially) → build → migration dry-run. Merges to `main` auto-deploy; migrations applied via CI step (`supabase db push` against the linked project) _before_ the app deploy that depends on them. Backward-compatible migrations only (expand → migrate → contract).
 - **Seed strategy**: `supabase/seed.sql` for competencies, personas, initial scoring config, and starter questions — same seed locally and in staging.
 - Region: co-locate the Supabase project and Vercel functions region (OPEN_QUESTIONS D — depends on target market, e.g., Singapore for SEA).
 
@@ -515,18 +527,18 @@ Privacy stance (Decision 9): org staff see **aggregates only by default**; membe
 
 What we're **deliberately not building yet**, and why the design doesn't block it:
 
-| Future need | Already-prepared seam |
-|---|---|
-| Adaptive assessment (V4) | `selection_strategy` interpreter + per-session `served_questions` snapshot; adaptive = new strategy type |
-| AI coaching (V5) | `lib/ai` adapter + prompt registry + `ai_recommendations` pattern generalizes to conversations |
-| Public API for enterprise (V3+) | All logic in services; route handlers are thin adapters |
-| Background job queue | `waitUntil` now; when AI volume or emails demand it, add a `jobs` table + Supabase cron/Edge Function worker or QStash — services already return before enrichment completes |
-| SSO/SAML for enterprise | Supabase Auth supports SAML on paid tier; auth flow already centralized |
-| Longer assessments — professional 20–30q, enterprise 40–60q (Decision 8) | Additional `assessments` rows with their own `question_count` + `selection_strategy`; runner, scoring, and confidence are already length-agnostic (per-session normalization, §11.1) |
-| Secondary persona display + persona combinations (Decision 3) | Secondary persona and full affinity vector computed & stored from MVP day one; display is a UI change only |
-| i18n (Decision 11: V1 English, localization-ready) | All user-facing content is DB-driven (questions, personas, competencies) → translation = additional content columns/tables. UI strings are centralized in one strings module from Phase 0 (no inline literals in components), so wiring next-intl later is mechanical |
-| Read scale | Postgres indexes + materialized views first; Supabase read replicas exist when needed. An 8-question assessment platform will be write-light and read-light for a long time — do not pre-optimize |
-| Question bank at 100+ | Already the data model; admin list views built with pagination/filtering from the start |
+| Future need                                                              | Already-prepared seam                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Adaptive assessment (V4)                                                 | `selection_strategy` interpreter + per-session `served_questions` snapshot; adaptive = new strategy type                                                                                                                                                              |
+| AI coaching (V5)                                                         | `lib/ai` adapter + prompt registry + `ai_recommendations` pattern generalizes to conversations                                                                                                                                                                        |
+| Public API for enterprise (V3+)                                          | All logic in services; route handlers are thin adapters                                                                                                                                                                                                               |
+| Background job queue                                                     | `waitUntil` now; when AI volume or emails demand it, add a `jobs` table + Supabase cron/Edge Function worker or QStash — services already return before enrichment completes                                                                                          |
+| SSO/SAML for enterprise                                                  | Supabase Auth supports SAML on paid tier; auth flow already centralized                                                                                                                                                                                               |
+| Longer assessments — professional 20–30q, enterprise 40–60q (Decision 8) | Additional `assessments` rows with their own `question_count` + `selection_strategy`; runner, scoring, and confidence are already length-agnostic (per-session normalization, §11.1)                                                                                  |
+| Secondary persona display + persona combinations (Decision 3)            | Secondary persona and full affinity vector computed & stored from MVP day one; display is a UI change only                                                                                                                                                            |
+| i18n (Decision 11: V1 English, localization-ready)                       | All user-facing content is DB-driven (questions, personas, competencies) → translation = additional content columns/tables. UI strings are centralized in one strings module from Phase 0 (no inline literals in components), so wiring next-intl later is mechanical |
+| Read scale                                                               | Postgres indexes + materialized views first; Supabase read replicas exist when needed. An 8-question assessment platform will be write-light and read-light for a long time — do not pre-optimize                                                                     |
+| Question bank at 100+                                                    | Already the data model; admin list views built with pagination/filtering from the start                                                                                                                                                                               |
 
 Honest scale assessment: this architecture comfortably serves tens of thousands of MAU on Supabase Pro + Vercel Pro without structural change. The first real pressure points will be (a) AI generation cost/latency → queue + cache, (b) analytics queries → materialized views. Both have marked seams.
 
@@ -538,7 +550,7 @@ Challenges to my own choices, honestly assessed:
 
 1. **"Supabase-js everywhere" vs. an ORM** — weakest-held decision. If scoring config queries or analytics get gnarly, Drizzle would be better. Mitigation: all queries isolated in `features/*/server/db.ts`, so a swap is contained. Deferring is still right; two data layers on day one is worse than either alone.
 2. **No job queue in MVP** — `waitUntil` has real limits (function timeout kills long AI calls). Accepted because the mandatory static fallback (§12) means a lost generation degrades gracefully. If AI latency p95 exceeds ~10s in practice, promote the jobs-table plan immediately.
-3. **Role enum on profiles vs. a memberships table** — an enum can't represent "org_admin of org A, user of org B." Accepted for MVP (nobody has two orgs yet); Phase 8 introduces `org_memberships` and the enum becomes the *platform* role. Flagged so Phase 8 budget includes this migration.
+3. **Role enum on profiles vs. a memberships table** — an enum can't represent "org_admin of org A, user of org B." Accepted for MVP (nobody has two orgs yet); Phase 8 introduces `org_memberships` and the enum becomes the _platform_ role. Flagged so Phase 8 budget includes this migration.
 4. **On-demand PDF generation** — CPU-ish work in a serverless function. Fine at MVP volume; cache to Storage behind the same URL if it ever isn't. Reversible in an afternoon.
 5. **Thin-slice admin in MVP** — ~~needs founder sign-off~~ **Approved and scoped by Decision 2** (question/competency/persona CRUD, weights, publish).
 6. **What would make me revisit the monolith**: a real-time team feature, a heavy async pipeline (bulk org assessments with AI reports), or a second client (mobile app) — none on the roadmap before V3.

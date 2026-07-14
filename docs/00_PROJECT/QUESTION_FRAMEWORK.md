@@ -25,11 +25,11 @@ Scenario ↓ Decision ↓ Trade-off ↓ Hidden competency mapping
 
 ## Rules
 
--   4 answer choices.
--   Every option must sound reasonable.
--   Best answer position changes every question.
--   Avoid jargon.
--   Everyday office scenarios.
+- 4 answer choices.
+- Every option must sound reasonable.
+- Best answer position changes every question.
+- Avoid jargon.
+- Everyday office scenarios.
 
 ## Hidden Scoring
 
