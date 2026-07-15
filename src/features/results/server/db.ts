@@ -23,7 +23,7 @@ export async function getPersona(personaId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("personas")
-    .select("slug, name, description")
+    .select("slug, name, description, artwork_url")
     .eq("id", personaId)
     .maybeSingle();
   if (error) throw error;

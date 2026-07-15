@@ -44,12 +44,12 @@ insert into public.traits (id, competency_id, slug, name, description, display_o
 on conflict (id) do nothing;
 
 -- ---------- personas ----------
-insert into public.personas (id, slug, name, description, display_order) values
-  ('b1000000-0000-4000-8000-000000000001', 'explorer',        'Explorer',        'Enthusiastic experimenter; tries everything, systematizes little — energy precedes structure.', 1),
-  ('b1000000-0000-4000-8000-000000000002', 'assistant-user',  'Assistant User',  'Practical task-delegator; AI is a competent helper summoned for discrete jobs.', 2),
-  ('b1000000-0000-4000-8000-000000000003', 'ai-collaborator', 'AI Collaborator', 'Iterative partner; drafts, critiques, verifies, refines — strong quality instincts.', 3),
-  ('b1000000-0000-4000-8000-000000000004', 'ai-builder',      'AI Builder',      'Systems constructor; converts discoveries into repeatable workflows the whole team can run.', 4),
-  ('b1000000-0000-4000-8000-000000000005', 'ai-architect',    'AI Architect',    'Organizational strategist; designs how groups adopt AI — processes, guardrails, direction.', 5)
+insert into public.personas (id, slug, name, description, artwork_url, display_order) values
+  ('b1000000-0000-4000-8000-000000000001', 'explorer',        'Explorer',        'Enthusiastic experimenter; tries everything, systematizes little — energy precedes structure.', '/personas/explorer.svg', 1),
+  ('b1000000-0000-4000-8000-000000000002', 'assistant-user',  'Assistant User',  'Practical task-delegator; AI is a competent helper summoned for discrete jobs.', '/personas/assistant-user.svg', 2),
+  ('b1000000-0000-4000-8000-000000000003', 'ai-collaborator', 'AI Collaborator', 'Iterative partner; drafts, critiques, verifies, refines — strong quality instincts.', '/personas/ai-collaborator.svg', 3),
+  ('b1000000-0000-4000-8000-000000000004', 'ai-builder',      'AI Builder',      'Systems constructor; converts discoveries into repeatable workflows the whole team can run.', '/personas/ai-builder.svg', 4),
+  ('b1000000-0000-4000-8000-000000000005', 'ai-architect',    'AI Architect',    'Organizational strategist; designs how groups adopt AI — processes, guardrails, direction.', '/personas/ai-architect.svg', 5)
 on conflict (id) do nothing;
 
 -- ---------- scoring config v1 (Decision 15: signatures are config) ----------

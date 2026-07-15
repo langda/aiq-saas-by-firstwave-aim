@@ -5,6 +5,7 @@ import type { AuthContext } from "@/core/types";
 import { generatePublicCode } from "@/lib/ids";
 
 import * as db from "./db";
+import { sendCertificateIssuedEmail } from "./email";
 
 /**
  * Certificate engine (ARCHITECTURE §13, Decision 6): every completion earns
@@ -19,17 +20,24 @@ export async function issueCertificate(input: {
   resultId: string;
   userId: string;
 }): Promise<void> {
+  const publicCode = generatePublicCode();
   await db.insertCertificate({
-    publicCode: generatePublicCode(),
+    publicCode,
     resultId: input.resultId,
     userId: input.userId,
   });
+  // Fire-and-forget notification (Resend): a failed or unconfigured email
+  // must never fail a submit.
+  void sendCertificateIssuedEmail(publicCode).catch((error) =>
+    console.error("certificate email failed", error),
+  );
 }
 
 export type PublicVerification = {
   status: "valid" | "revoked";
   holderName: string | null;
   personaName: string | null;
+  personaArtworkUrl: string | null;
   assessmentTitle: string;
   issuedAt: string;
 };
@@ -45,6 +53,7 @@ export async function getPublicVerification(
     status: record.revokedAt ? "revoked" : "valid",
     holderName: record.holderName,
     personaName: record.personaName,
+    personaArtworkUrl: record.personaArtworkUrl,
     assessmentTitle: record.assessmentTitle,
     issuedAt: record.issuedAt,
   };

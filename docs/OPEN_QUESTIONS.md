@@ -23,7 +23,7 @@ Where are the first 1,000 users — Cambodia/SEA, global English, US? Sets Supab
 **E. ⚠️ Brand visual identity before Phase 5 (Results).**
 Positioning is decided (Decision 12: "AI Work Style & Readiness Assessment", behavioral not exam). Still needed: palette, typeface, persona artwork. Results + certificate are the shareable growth surfaces. **Proposal stands:** I draft a token set (palette, type scale, radii, motion) at Milestone 0 for your approval; persona artwork before Milestone 3.
 
-**F. ○ Transactional email beyond auth mails** (certificate-issued email, later org invitations). Resend is the natural pick. Confirm nothing beyond Supabase's built-in auth emails is expected in V1.
+**F. ~~Transactional email~~ — RESOLVED (Decision 18, 2026-07-15).** Resend adopted; certificate-issued email implemented behind `RESEND_API_KEY` (+ `EMAIL_FROM`, `APP_URL`). Remaining setup: create a Resend account, verify the sending domain, add the key to env.
 
 **G. ○ External product-analytics tool.** Events table covers V1 funnel metrics. Add PostHog only if you want session replays / no-code funnel exploration. Recommendation: none for V1.
 

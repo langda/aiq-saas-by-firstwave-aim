@@ -49,12 +49,25 @@ export default async function ResultsPage({
       {/* Persona reveal */}
       <Reveal>
         <section className="from-primary/10 via-primary/5 rounded-2xl bg-gradient-to-br to-transparent p-8 md:p-10">
-          <p className="text-primary text-sm font-medium tracking-wide uppercase">
-            {s.persona}
-          </p>
-          <h1 className="mt-2 text-4xl font-semibold tracking-tight md:text-5xl">
-            {persona?.name ?? "—"}
-          </h1>
+          <div className="flex items-start justify-between gap-6">
+            <div>
+              <p className="text-primary text-sm font-medium tracking-wide uppercase">
+                {s.persona}
+              </p>
+              <h1 className="mt-2 text-4xl font-semibold tracking-tight md:text-5xl">
+                {persona?.name ?? "—"}
+              </h1>
+            </div>
+            {persona?.artwork_url && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={persona.artwork_url}
+                alt=""
+                aria-hidden
+                className="size-20 shrink-0 rounded-2xl shadow-sm md:size-24"
+              />
+            )}
+          </div>
           <p className="text-muted-foreground mt-3 max-w-lg text-lg text-pretty">
             {persona?.description}
           </p>

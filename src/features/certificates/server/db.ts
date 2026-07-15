@@ -50,6 +50,7 @@ export type VerificationRecord = {
   holderName: string | null;
   personaName: string | null;
   personaDescription: string | null;
+  personaArtworkUrl: string | null;
   overallScore: number;
   assessmentTitle: string;
 };
@@ -91,7 +92,7 @@ export async function getCertificateByCode(
       .maybeSingle(),
     admin
       .from("personas")
-      .select("name, description")
+      .select("name, description, artwork_url")
       .eq("id", result.persona_id)
       .maybeSingle(),
     admin
@@ -108,6 +109,7 @@ export async function getCertificateByCode(
     holderName: profile.data?.full_name ?? null,
     personaName: persona.data?.name ?? null,
     personaDescription: persona.data?.description ?? null,
+    personaArtworkUrl: persona.data?.artwork_url ?? null,
     overallScore: result.overall_score,
     assessmentTitle:
       (

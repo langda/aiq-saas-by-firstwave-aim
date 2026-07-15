@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="AI Architect">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#312e81"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <!-- the system of systems: a network designed, not grown -->
+  <g stroke="#ffffff" stroke-width="8" opacity="0.75">
+    <line x1="256" y1="128" x2="136" y2="330"/>
+    <line x1="256" y1="128" x2="376" y2="330"/>
+    <line x1="136" y1="330" x2="376" y2="330"/>
+    <line x1="256" y1="128" x2="256" y2="330"/>
+    <line x1="136" y1="330" x2="256" y2="230"/>
+    <line x1="376" y1="330" x2="256" y2="230"/>
+  </g>
+  <circle cx="256" cy="128" r="34" fill="#ffffff"/>
+  <circle cx="136" cy="330" r="26" fill="#ffffff" opacity="0.9"/>
+  <circle cx="376" cy="330" r="26" fill="#ffffff" opacity="0.9"/>
+  <circle cx="256" cy="230" r="20" fill="#ffffff" opacity="0.8"/>
+  <circle cx="256" cy="128" r="14" fill="#7c3aed"/>
+</svg>

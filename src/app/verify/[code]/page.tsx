@@ -71,6 +71,15 @@ export default async function VerifyPage({
           {verification.status === "valid" && (
             <CardContent className="flex flex-col gap-4">
               <div className="from-primary/10 via-primary/5 rounded-xl bg-gradient-to-br to-transparent p-6 text-center">
+                {verification.personaArtworkUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={verification.personaArtworkUrl}
+                    alt=""
+                    aria-hidden
+                    className="mx-auto mb-4 size-16 rounded-xl shadow-sm"
+                  />
+                )}
                 <p className="text-muted-foreground text-xs tracking-wide uppercase">
                   {s.holder}
                 </p>

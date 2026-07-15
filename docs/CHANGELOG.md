@@ -4,6 +4,14 @@ Decisions recorded here are product source of truth, alongside `docs/00_PROJECT/
 
 ---
 
+## 2026-07-15 — Founder Decisions (Session 6): artwork, email, GitHub
+
+17. **Persona artwork v1** — five original abstract SVG marks (`public/personas/*.svg`), one visual metaphor per work style (Explorer: uneven discovery burst · Assistant User: prompt-and-check handoff · AI Collaborator: interlocking iteration loops · AI Builder: blocks locking into structure · AI Architect: designed network). Consistent rounded-square + gradient system on the token palette. Wired into results hero, verify page, and seed/DB `artwork_url`.
+18. **Transactional email = Resend** (closes OPEN_QUESTIONS F). `lib/email` adapter (same discipline as `lib/ai`: no provider SDK outside it); certificate-issued email fires best-effort at issuance — silently skipped without `RESEND_API_KEY` / for anonymous users. Env: `RESEND_API_KEY`, `EMAIL_FROM`, `APP_URL` (all optional).
+19. **GitHub remote**: https://github.com/langda/aiq-saas-by-firstwave-aim.git — codebase pushed; CI (GitHub Actions) active from first push.
+
+---
+
 ## 2026-07-15 — Milestone 4: certificate + share loop (Session 5)
 
 Decision 6 implemented end to end:

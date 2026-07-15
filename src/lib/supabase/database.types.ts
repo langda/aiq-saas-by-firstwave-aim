@@ -41,6 +41,7 @@ export type Database = {
         slug: string;
         name: string;
         description: string;
+        artwork_url: string | null;
         display_order: number;
         status: string;
       }>;

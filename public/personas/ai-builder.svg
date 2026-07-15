@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="AI Builder">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <!-- systems from pieces: blocks locking into a repeatable structure -->
+  <g fill="#ffffff">
+    <rect x="128" y="300" width="108" height="84" rx="16" opacity="0.95"/>
+    <rect x="276" y="300" width="108" height="84" rx="16" opacity="0.8"/>
+    <rect x="202" y="196" width="108" height="84" rx="16" opacity="0.95"/>
+    <rect x="128" y="92"  width="108" height="84" rx="16" opacity="0.55"/>
+    <rect x="276" y="92"  width="108" height="84" rx="16" opacity="0.4"/>
+  </g>
+  <!-- the connecting piece being placed -->
+  <g stroke="#ffffff" stroke-width="10" stroke-linecap="round" opacity="0.9">
+    <line x1="256" y1="280" x2="256" y2="300"/>
+    <line x1="236" y1="176" x2="200" y2="196"/>
+    <line x1="276" y1="176" x2="312" y2="196"/>
+  </g>
+</svg>
