@@ -17,7 +17,9 @@ The complete assessment loop, end to end: anonymous-first start → seeded rando
 - **Raw results page** (Milestone 3 owns the polish): persona, overall, competency bars, strengths/blind spots, confidence level.
 - Tests: engine (19), selection (5), sanitization leak-guard (3), claim (5), plus foundation tests.
 
-Verification note: everything runnable without a database is verified locally; migration/RLS/end-to-end verification requires the cloud Supabase project (see Session-4 summary for the exact steps and required credentials). `supabase/tests/rls_verification.sql` automates the RLS checks.
+**Verified against the cloud Supabase project** (`xemxfawkmrlcoetjugup`, ap-south-1) on 2026-07-15: all 5 migrations applied; seed complete (8/24/5/8/32/62 rows); `supabase/tests/rls_verification.sql` → **RLS VERIFICATION PASSED** (signals/configs invisible to clients, session isolation, Decision-1 anonymous result gate, admin-only writes); profile + role-claim triggers fire on real signups; full E2E loop (signup → 8 answers autosaved → server scoring → results) produced a correct result: overall 34, primary AI Builder (affinity 0.779), secondary Explorer — with the Architect `overallGte` gate correctly excluding a higher-affinity persona. Confidence "moderate" (0.524), snapshot + events persisted.
+
+Outstanding dashboard configuration (founder): enable **anonymous sign-ins** (blocks the Decision-1 anonymous-first flow; confirmed disabled by live test) and decide on **email confirmation** (currently ON — new signups can't sign in until confirmed; either disable for MVP or configure SMTP + confirmation UX). Type generation (`npm run db:types`) still needs Docker or a Supabase access token.
 
 ---
 

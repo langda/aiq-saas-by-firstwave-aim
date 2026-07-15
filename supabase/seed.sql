@@ -234,5 +234,5 @@ insert into public.assessment_questions (assessment_id, question_id, position)
 select 'f1000000-0000-4000-8000-000000000001', id,
        row_number() over (order by id)
 from public.questions
-where id like 'd1000000%'
+where id::text like 'd1000000%'
 on conflict do nothing;
