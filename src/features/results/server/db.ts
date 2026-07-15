@@ -30,6 +30,27 @@ export async function getPersona(personaId: string) {
   return data;
 }
 
+/** Result history for the dashboard (newest first). RLS scopes to owner. */
+export async function listResultsForUser() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("results")
+    .select("id, session_id, overall_score, persona_id, created_at")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
+export async function getPersonaNames() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("personas")
+    .select("id, name")
+    .order("display_order");
+  if (error) throw error;
+  return new Map((data ?? []).map((p) => [p.id, p.name]));
+}
+
 export async function getCompetencyNames() {
   const supabase = await createClient();
   const { data, error } = await supabase

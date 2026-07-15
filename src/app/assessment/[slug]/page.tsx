@@ -30,9 +30,12 @@ export default async function AssessmentPage({
   const ctx = await getAuthContext();
 
   let runnerState = null;
+  let retakeAt: string | null = null;
   if (ctx) {
     try {
       runnerState = await assessmentService.getRunnerState(ctx, slug);
+      if (!runnerState)
+        retakeAt = await assessmentService.getRetakeGate(ctx, slug);
     } catch (e) {
       if (e instanceof ServiceError && e.code === "not_found") notFound();
       throw e;
@@ -48,6 +51,28 @@ export default async function AssessmentPage({
       </div>
       {runnerState ? (
         <AssessmentRunner state={runnerState} />
+      ) : retakeAt ? (
+        <section className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center gap-4 text-center">
+          <h1 className="text-3xl font-semibold tracking-tight text-balance">
+            {strings.retake.lockedTitle}
+          </h1>
+          <p className="text-muted-foreground">
+            {strings.retake.lockedBody}{" "}
+            {new Date(retakeAt).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+            .
+          </p>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link href="/dashboard" />}
+          >
+            {strings.retake.viewResults}
+          </Button>
+        </section>
       ) : (
         <section className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center gap-6 text-center">
           <h1 className="text-3xl font-semibold tracking-tight text-balance">

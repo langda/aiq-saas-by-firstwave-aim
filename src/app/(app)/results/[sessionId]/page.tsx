@@ -4,6 +4,8 @@ import { z } from "zod";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CompetencyRadar } from "@/features/results/components/competency-radar";
+import { Reveal } from "@/features/results/components/reveal";
 import * as db from "@/features/results/server/db";
 import { strings } from "@/lib/strings";
 
@@ -16,11 +18,6 @@ const confidenceSchema = z.object({
 });
 const slugListSchema = z.array(z.string());
 
-/**
- * Walking-skeleton results page (Milestone 1): correct data, raw display.
- * Charts, persona artwork, and recommendations arrive in Milestones 3/5.
- * RLS already guarantees ownership + the permanent-account gate.
- */
 export default async function ResultsPage({
   params,
 }: {
@@ -42,101 +39,135 @@ export default async function ResultsPage({
   const strengths = slugListSchema.parse(result.strengths);
   const blindSpots = slugListSchema.parse(result.blind_spots);
   const nameOf = new Map(competencies.map((c) => [c.slug, c.name]));
+  const s = strings.results;
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-6">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold">{strings.results.title}</h1>
-        <p className="text-muted-foreground text-sm">
-          {new Date(result.created_at).toLocaleDateString()}
-        </p>
-      </header>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{strings.results.persona}</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-2">
-          <p className="text-3xl font-semibold">{persona?.name ?? "—"}</p>
-          <p className="text-muted-foreground">{persona?.description}</p>
-          <p className="pt-2 text-sm">
-            {strings.results.overall}:{" "}
-            <span className="font-semibold">{result.overall_score} / 100</span>
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 pb-16">
+      {/* Persona reveal */}
+      <Reveal>
+        <section className="from-primary/10 via-primary/5 rounded-2xl bg-gradient-to-br to-transparent p-8 md:p-10">
+          <p className="text-primary text-sm font-medium tracking-wide uppercase">
+            {s.persona}
           </p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{strings.results.competencies}</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
-          {competencies.map((c) => {
-            const score = scores[c.slug];
-            return (
-              <div key={c.slug} className="flex items-center gap-3">
-                <span className="w-40 shrink-0 text-sm">{c.name}</span>
-                {score === null || score === undefined ? (
-                  <span className="text-muted-foreground text-sm">
-                    {strings.results.notMeasured}
-                  </span>
-                ) : (
-                  <>
-                    <div className="bg-muted h-2 flex-1 rounded-full">
-                      <div
-                        className="bg-primary h-2 rounded-full"
-                        style={{ width: `${score}%` }}
-                      />
-                    </div>
-                    <span className="w-8 text-right text-sm tabular-nums">
-                      {score}
-                    </span>
-                  </>
-                )}
-              </div>
-            );
-          })}
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-6 sm:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>{strings.results.strengths}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-2">
-            {strengths.map((slug) => (
-              <Badge key={slug}>{nameOf.get(slug) ?? slug}</Badge>
-            ))}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>{strings.results.blindSpots}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-2">
-            {blindSpots.map((slug) => (
-              <Badge key={slug} variant="outline">
-                {nameOf.get(slug) ?? slug}
-              </Badge>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>{strings.results.confidence}</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-1">
-          <p className="font-medium capitalize">{confidence.level}</p>
+          <h1 className="mt-2 text-4xl font-semibold tracking-tight md:text-5xl">
+            {persona?.name ?? "—"}
+          </h1>
+          <p className="text-muted-foreground mt-3 max-w-lg text-lg text-pretty">
+            {persona?.description}
+          </p>
+          <div className="mt-6 flex items-center gap-6">
+            <div>
+              <p className="text-3xl font-semibold tabular-nums">
+                {result.overall_score}
+                <span className="text-muted-foreground text-lg font-normal">
+                  {" "}
+                  / 100
+                </span>
+              </p>
+              <p className="text-muted-foreground text-sm">{s.overall}</p>
+            </div>
+            <div className="border-border h-10 border-l" aria-hidden />
+            <div>
+              <p className="font-medium capitalize">{confidence.level}</p>
+              <p className="text-muted-foreground text-sm">{s.confidence}</p>
+            </div>
+          </div>
           {confidence.level === "low" && (
-            <p className="text-muted-foreground text-sm">
-              {strings.results.confidenceLow}
+            <p className="text-muted-foreground mt-4 text-sm">
+              {s.confidenceLow}
             </p>
           )}
-        </CardContent>
-      </Card>
+        </section>
+      </Reveal>
+
+      {/* Radar + bars */}
+      <Reveal delay={0.15}>
+        <Card>
+          <CardHeader>
+            <CardTitle>{s.competencies}</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-6">
+            <CompetencyRadar
+              data={competencies.map((c) => ({
+                name: c.name,
+                score: scores[c.slug] ?? null,
+              }))}
+            />
+            <div className="flex flex-col gap-3">
+              {competencies.map((c) => {
+                const score = scores[c.slug];
+                return (
+                  <div key={c.slug} className="flex items-center gap-3">
+                    <span className="w-36 shrink-0 text-sm md:w-40">
+                      {c.name}
+                    </span>
+                    {score === null || score === undefined ? (
+                      <span className="text-muted-foreground text-sm">
+                        {s.notMeasured}
+                      </span>
+                    ) : (
+                      <>
+                        <div className="bg-muted h-2 flex-1 overflow-hidden rounded-full">
+                          <div
+                            className="bg-primary h-2 rounded-full"
+                            style={{ width: `${score}%` }}
+                          />
+                        </div>
+                        <span className="w-8 text-right text-sm tabular-nums">
+                          {score}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      </Reveal>
+
+      <Reveal delay={0.25} className="grid gap-6 sm:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>{s.strengths}</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap content-start gap-2">
+            {strengths.length === 0 ? (
+              <p className="text-muted-foreground text-sm">{s.noneYet}</p>
+            ) : (
+              strengths.map((slug) => (
+                <Badge key={slug}>{nameOf.get(slug) ?? slug}</Badge>
+              ))
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>{s.blindSpots}</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap content-start gap-2">
+            {blindSpots.length === 0 ? (
+              <p className="text-muted-foreground text-sm">{s.noneYet}</p>
+            ) : (
+              blindSpots.map((slug) => (
+                <Badge key={slug} variant="outline">
+                  {nameOf.get(slug) ?? slug}
+                </Badge>
+              ))
+            )}
+          </CardContent>
+        </Card>
+      </Reveal>
+
+      <Reveal delay={0.3}>
+        <p className="text-muted-foreground text-center text-sm">
+          {new Date(result.created_at).toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </p>
+      </Reveal>
     </div>
   );
 }

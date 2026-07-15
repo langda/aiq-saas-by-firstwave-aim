@@ -41,6 +41,12 @@ export const strings = {
     emptyTitle: "No assessments yet",
     emptyBody: "Take your first assessment to discover your AI work style.",
     emptyAction: "Start the assessment",
+    currentProfile: "Your current profile",
+    viewResults: "View full results",
+    history: "Progress over time",
+    historyHint: "Your newest result is your profile. Retake every 30 days.",
+    retakeAction: "Retake the assessment",
+    retakeLockedPrefix: "Next retake available",
   },
   assessment: {
     introNote:
@@ -50,8 +56,16 @@ export const strings = {
   },
   runner: {
     back: "Back",
+    next: "Next",
     submit: "See my results",
     answered: "answered",
+    progressLabel: "Assessment progress",
+    keyHint: "Press 1–4 to answer · arrows to navigate",
+  },
+  retake: {
+    lockedTitle: "You've completed this assessment",
+    lockedBody: "Retake available on",
+    viewResults: "View your latest results",
   },
   claim: {
     title: "Your results are ready",
@@ -72,6 +86,7 @@ export const strings = {
     confidence: "Profile confidence",
     confidenceLow: "We need more information to build an accurate profile.",
     notMeasured: "Not measured",
+    noneYet: "None identified in this session.",
   },
   admin: {
     title: "Admin",

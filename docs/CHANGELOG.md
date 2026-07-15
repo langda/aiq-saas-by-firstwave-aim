@@ -4,6 +4,19 @@ Decisions recorded here are product source of truth, alongside `docs/00_PROJECT/
 
 ---
 
+## 2026-07-15 — Milestone 3: experience polish (Session 5)
+
+- **Design tokens v1** (open question E, proposed & applied, veto-able in one file): Geist type, indigo accent `oklch(0.51 0.23 277)` light / `oklch(0.68 0.18 277)` dark, accent-tinted focus rings, 0.75rem radius. All in `src/app/globals.css`.
+- **Runner**: one-question-per-screen with directional slide transitions (`motion`), animated progress bar, numbered option chips, keyboard 1–4 + arrow navigation, focus moved to each question heading (screen readers), `prefers-reduced-motion` honored, autosave/resume unchanged.
+- **Results**: persona-reveal hero (gradient, staggered `Reveal` animations), competency radar (Recharts, themed via CSS vars, hidden under 3 measured competencies), bars, strengths/blind-spots with empty states.
+- **Dashboard**: current-profile card, full result history with progress-over-time line chart (hidden under 2 results), retake CTA or locked date.
+- **Retake cooldown now ENFORCED** (Decision 7): `startSession` rejects within the configurable cooldown (default 30 days, from `assessments.settings`); intro page and dashboard show the unlock date instead of a dead button.
+- Loading skeletons for runner and results routes.
+- Verified live with a second test user: full keyboard-driven run (8 questions), submit, animated results (28/100, AI Builder, empty-strengths state correct); first user's dashboard shows the locked retake date (Aug 14, 2026). Mobile (375px) verified.
+- Known nit: radar edge labels clip ~2px on narrow screens; revisit with brand pass.
+
+---
+
 ## 2026-07-15 — Milestone 2: thin admin (Session 5)
 
 Full content lifecycle without SQL (Decision 2 scope): question CRUD with a behavioral-signal editor, competency CRUD, persona CRUD (identity fields; signatures stay in scoring config), assessment publish/unpublish with a readiness gate (needs N published questions).

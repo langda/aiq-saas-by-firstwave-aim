@@ -72,6 +72,24 @@ export async function getActiveSession(userId: string, assessmentId: string) {
   return data;
 }
 
+export async function getLatestCompletedSession(
+  userId: string,
+  assessmentId: string,
+) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("assessment_sessions")
+    .select("id, completed_at")
+    .eq("user_id", userId)
+    .eq("assessment_id", assessmentId)
+    .eq("status", "completed")
+    .order("completed_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
 export async function getSessionById(sessionId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase

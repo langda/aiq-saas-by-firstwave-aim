@@ -2,6 +2,8 @@ import "server-only";
 
 import { randomUUID } from "node:crypto";
 
+import { z } from "zod";
+
 import { canTakeAssessment } from "@/core/authz";
 import { parseScoringConfig } from "@/core/scoring/config";
 import { score } from "@/core/scoring/engine";
@@ -32,6 +34,26 @@ export class ServiceError extends Error {
   }
 }
 
+const settingsSchema = z
+  .object({ retakeCooldownDays: z.number().int().min(0).default(30) })
+  .passthrough();
+
+/** When the user may retake (Decision 7). null = now / never taken. */
+export async function getRetakeAvailableAt(
+  ctx: AuthContext,
+  assessment: { id: string; settings: unknown },
+): Promise<Date | null> {
+  const { retakeCooldownDays } = settingsSchema.parse(
+    assessment.settings ?? {},
+  );
+  if (retakeCooldownDays === 0) return null;
+  const last = await db.getLatestCompletedSession(ctx.userId, assessment.id);
+  if (!last?.completed_at) return null;
+  const availableAt = new Date(last.completed_at);
+  availableAt.setDate(availableAt.getDate() + retakeCooldownDays);
+  return availableAt > new Date() ? availableAt : null;
+}
+
 /** Starts a session (or resumes the in-progress one). Returns the session id. */
 export async function startSession(
   ctx: AuthContext,
@@ -45,6 +67,13 @@ export async function startSession(
 
   const existing = await db.getActiveSession(ctx.userId, assessment.id);
   if (existing) return { sessionId: existing.id, resumed: true };
+
+  const retakeAt = await getRetakeAvailableAt(ctx, assessment);
+  if (retakeAt)
+    throw new ServiceError(
+      "conflict",
+      `Retake available on ${retakeAt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`,
+    );
 
   const seed = randomUUID();
   const strategy = selectionStrategySchema.parse(assessment.selection_strategy);
@@ -96,6 +125,17 @@ export async function startSession(
   });
 
   return { sessionId: session.id, resumed: false };
+}
+
+/** Intro-screen gate: ISO date when retake unlocks, or null if free to start. */
+export async function getRetakeGate(
+  ctx: AuthContext,
+  slug: string,
+): Promise<string | null> {
+  const assessment = await db.getPublishedAssessment(slug);
+  if (!assessment) return null;
+  const availableAt = await getRetakeAvailableAt(ctx, assessment);
+  return availableAt ? availableAt.toISOString() : null;
 }
 
 /** Loads everything the runner needs, sanitized, in served order. */
