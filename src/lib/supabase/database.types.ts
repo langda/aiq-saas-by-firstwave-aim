@@ -153,6 +153,18 @@ export type Database = {
         },
         "type"
       >;
+      audit_logs: Table<
+        {
+          id: number;
+          actor_id: string;
+          action: string;
+          entity_type: string;
+          entity_id: string;
+          diff: Json;
+          created_at: string;
+        },
+        "actor_id" | "action" | "entity_type" | "entity_id"
+      >;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

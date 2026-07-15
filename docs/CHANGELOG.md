@@ -4,6 +4,19 @@ Decisions recorded here are product source of truth, alongside `docs/00_PROJECT/
 
 ---
 
+## 2026-07-15 — Milestone 2: thin admin (Session 5)
+
+Full content lifecycle without SQL (Decision 2 scope): question CRUD with a behavioral-signal editor, competency CRUD, persona CRUD (identity fields; signatures stay in scoring config), assessment publish/unpublish with a readiness gate (needs N published questions).
+
+- **Publish gate** (`features/questions/authoring.ts`, unit-tested): ASSESSMENT_MODEL §3.1/§9 as executable rules — exactly 4 options, 1–3 signals each, weights 0.5–3.0, ≥2 distinct competencies; balance issues surface as warnings.
+- **Immutability guardrail (§4.5)**: questions with recorded responses are locked server-side and in the UI — archive and replace. Editing a published question without responses bumps its version.
+- **Slug lock**: competency/persona slugs are immutable after creation (they key scoring-config signatures and signal aggregation).
+- **Audit logging** on every mutation via service role (admins cannot suppress their own trail). Admin CRUD itself runs through the cookie client so super_admin RLS is exercised on every operation.
+- New shadcn components: table, textarea. Shared `TaxonomyForm`/`TaxonomyList` serve both competencies and personas.
+- Verified live: authored and published a 9th question ("The overloaded inbox") entirely through the UI; audit trail shows `question.create` + `question.publish`; locked banner confirmed on a seed question with responses; assessments page shows 8/8 readiness with publish toggle. Trait-level signal tagging deferred (signals are competency-level in the editor, matching seed v1).
+
+---
+
 ## 2026-07-14 — Milestone 1: schema + walking skeleton (Session 4)
 
 The complete assessment loop, end to end: anonymous-first start → seeded randomized runner with autosave → server-side scoring → claim gate → results page.
