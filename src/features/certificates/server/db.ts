@@ -43,6 +43,23 @@ export async function getCertificateForSession(sessionId: string) {
   } | null;
 }
 
+/** Certificate code for a session (service client — used post-claim, where
+ *  ownership was just established by the claim token). */
+export async function getCertificateCodeBySession(
+  sessionId: string,
+): Promise<string | null> {
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from("certificates")
+    .select("public_code, results!inner(session_id)")
+    .eq("results.session_id", sessionId)
+    .maybeSingle();
+  if (error) throw error;
+  return (
+    (data as unknown as { public_code: string } | null)?.public_code ?? null
+  );
+}
+
 export type VerificationRecord = {
   publicCode: string;
   issuedAt: string;

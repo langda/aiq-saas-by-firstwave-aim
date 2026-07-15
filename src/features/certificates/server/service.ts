@@ -33,6 +33,21 @@ export async function issueCertificate(input: {
   );
 }
 
+/**
+ * Re-trigger the certificate email once a session gains an email address —
+ * the anonymous-first funnel issues certificates before one exists (§5.1).
+ * Called after claim completion; best-effort like all email.
+ */
+export async function emailCertificateForSession(
+  sessionId: string,
+): Promise<void> {
+  const publicCode = await db.getCertificateCodeBySession(sessionId);
+  if (!publicCode) return;
+  void sendCertificateIssuedEmail(publicCode).catch((error) =>
+    console.error("certificate email failed", error),
+  );
+}
+
 export type PublicVerification = {
   status: "valid" | "revoked";
   holderName: string | null;

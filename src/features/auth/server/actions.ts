@@ -74,6 +74,13 @@ export async function finishClaim(): Promise<void> {
     cookieStore.get(CLAIM_COOKIE)?.value,
   );
   cookieStore.delete(CLAIM_COOKIE);
+  if (sessionId) {
+    // The anonymous-first funnel issues certificates before an email exists —
+    // now that this session has an owner with an address, send it.
+    const { emailCertificateForSession } =
+      await import("@/features/certificates/server/service");
+    await emailCertificateForSession(sessionId);
+  }
   redirect(sessionId ? `/results/${sessionId}` : "/dashboard");
 }
 
