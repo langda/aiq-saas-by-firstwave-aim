@@ -4,6 +4,8 @@ import { z } from "zod";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CertificateActions } from "@/features/certificates/components/certificate-actions";
+import * as certificatesDb from "@/features/certificates/server/db";
 import { CompetencyRadar } from "@/features/results/components/competency-radar";
 import { Reveal } from "@/features/results/components/reveal";
 import * as db from "@/features/results/server/db";
@@ -29,9 +31,10 @@ export default async function ResultsPage({
   const result = await db.getResultBySession(sessionId);
   if (!result) notFound();
 
-  const [persona, competencies] = await Promise.all([
+  const [persona, competencies, certificate] = await Promise.all([
     db.getPersona(result.persona_id),
     db.getCompetencyNames(),
+    certificatesDb.getCertificateForSession(sessionId),
   ]);
 
   const scores = competencyScoresSchema.parse(result.competency_scores);
@@ -158,6 +161,19 @@ export default async function ResultsPage({
           </CardContent>
         </Card>
       </Reveal>
+
+      {certificate && !certificate.revoked_at && (
+        <Reveal delay={0.28}>
+          <Card>
+            <CardHeader>
+              <CardTitle>{strings.certificate.sectionTitle}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CertificateActions code={certificate.public_code} />
+            </CardContent>
+          </Card>
+        </Reveal>
+      )}
 
       <Reveal delay={0.3}>
         <p className="text-muted-foreground text-center text-sm">

@@ -76,6 +76,26 @@ export const strings = {
     continueTitle: "Welcome back",
     continueSubtitle: "Your assessment is complete.",
   },
+  certificate: {
+    sectionTitle: "Your certificate",
+    download: "Download certificate (PDF)",
+    copyLink: "Copy verification link",
+    copied: "Link copied.",
+    shareHint:
+      "Anyone with the link sees your work style and date — never your scores.",
+  },
+  verify: {
+    title: "Certificate verification",
+    valid: "Valid certificate",
+    revoked: "This certificate has been revoked",
+    notFoundTitle: "Certificate not found",
+    notFoundBody: "This verification code doesn't match any AIQ certificate.",
+    holder: "Issued to",
+    persona: "AI work style",
+    issued: "Issued",
+    assessment: "Assessment",
+    cta: "Discover your own AI work style",
+  },
   results: {
     title: "Your results",
     overall: "Overall score",

@@ -143,6 +143,19 @@ export type Database = {
         | "scoring_config_id"
         | "scoring_snapshot"
       >;
+      certificates: Table<
+        {
+          id: string;
+          public_code: string;
+          result_id: string;
+          user_id: string;
+          issued_at: string;
+          expires_at: string | null;
+          revoked_at: string | null;
+          metadata: Json;
+        },
+        "public_code" | "result_id" | "user_id"
+      >;
       events: Table<
         {
           id: number;

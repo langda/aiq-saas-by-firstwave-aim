@@ -13,6 +13,7 @@ import {
   selectionStrategySchema,
 } from "@/core/selection/strategy";
 import type { AuthContext } from "@/core/types";
+import { issueCertificate } from "@/features/certificates/server/service";
 
 import type { ServedQuestions } from "../schemas";
 import type { PublicQuestion, RunnerState } from "../types";
@@ -264,7 +265,7 @@ export async function submitSession(
     );
 
   const claimToken = randomUUID();
-  await db.persistResult({
+  const result = await db.persistResult({
     sessionId,
     userId: ctx.userId,
     overallScore: outcome.overallScore,
@@ -282,6 +283,10 @@ export async function submitSession(
     scoringSnapshot: { configVersion: configRow.version, signals, served },
     claimToken,
   });
+
+  // Every completion earns a certificate (Decision 6). Issued to the current
+  // user id — the claim flow re-parents it if the account changes (§5.2).
+  await issueCertificate({ resultId: result.id, userId: ctx.userId });
 
   await db.logEvent({
     type: "assessment_completed",

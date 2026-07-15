@@ -4,6 +4,20 @@ Decisions recorded here are product source of truth, alongside `docs/00_PROJECT/
 
 ---
 
+## 2026-07-15 — Milestone 4: certificate + share loop (Session 5)
+
+Decision 6 implemented end to end:
+
+- **Issuance**: every submit creates a certificate (idempotent per result; 21-char base58 code ≈ 123 bits — unguessable). Claim flow already re-parents certificates on account change. Existing results backfilled.
+- **PDF** (`/api/certificates/[code]/pdf`): on-demand via @react-pdf/renderer — name, persona + description, overall score, date, verify URL + QR (qrcode). **Holder-only (401 otherwise)**: the PDF carries the score, which the public code deliberately never discloses; sharing the PDF is the holder's choice.
+- **Public verify page** (`/verify/[code]`): name, persona, assessment, date, valid/revoked badge — never scores or competency breakdown, including page metadata (revoked/unknown certificates disclose nothing at all). Doubles as acquisition surface (CTA).
+- **OG share image** (`next/og`): persona-forward 1200×630 card on the verify URL, same disclosure rules.
+- **Results page**: certificate card with PDF download + copy-verification-link (with a plain-language disclosure hint).
+- Verified live: PDF 200 with auth / 401 without; verify page shows name+persona and provably does not contain the score; bogus codes → not-found; revoked → banner with zero holder disclosure (metadata leak found and fixed during verification); OG endpoint serves image/png.
+- Deferred: certificate email (open question F unanswered), rate limiting on public endpoints (needs an infra choice — flagged for pre-launch), `verify` OG image on the marketing/results pages.
+
+---
+
 ## 2026-07-15 — Milestone 3: experience polish (Session 5)
 
 - **Design tokens v1** (open question E, proposed & applied, veto-able in one file): Geist type, indigo accent `oklch(0.51 0.23 277)` light / `oklch(0.68 0.18 277)` dark, accent-tinted focus rings, 0.75rem radius. All in `src/app/globals.css`.
