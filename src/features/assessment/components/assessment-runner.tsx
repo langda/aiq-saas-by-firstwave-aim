@@ -8,6 +8,7 @@ import { strings } from "@/lib/strings";
 
 import { saveAnswer, submitAssessment } from "../server/actions";
 import type { RunnerState } from "../types";
+import { RevealOverlay } from "./reveal-overlay";
 
 /**
  * The assessment runner (Milestone 3 polish): one question per screen,
@@ -31,6 +32,7 @@ export function AssessmentRunner({ state }: { state: RunnerState }) {
   const [direction, setDirection] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [revealing, setRevealing] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const questionShownAt = useRef(0);
 
@@ -69,9 +71,17 @@ export function AssessmentRunner({ state }: { state: RunnerState }) {
 
   function submit() {
     setError(null);
+    setRevealing(true);
     startTransition(async () => {
+      // Hold the anticipation beat (UX_REVIEW §4) BEFORE submitting — the
+      // action's redirect navigates the moment it resolves, so the stage
+      // sequence must play first.
+      await new Promise((resolve) => setTimeout(resolve, 2400));
       const result = await submitAssessment({ sessionId });
-      if (result && !result.ok) setError(result.error.message);
+      if (result && !result.ok) {
+        setRevealing(false);
+        setError(result.error.message);
+      }
     });
   }
 
@@ -105,6 +115,7 @@ export function AssessmentRunner({ state }: { state: RunnerState }) {
 
   return (
     <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-8">
+      {revealing && <RevealOverlay />}
       {/* Progress */}
       <div className="flex items-center gap-4">
         <div

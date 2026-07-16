@@ -4,6 +4,20 @@ Decisions recorded here are product source of truth, alongside `docs/00_PROJECT/
 
 ---
 
+## 2026-07-16 — UX Phase A: the reveal & hero v2 (Session 7)
+
+Founder approved UX_REVIEW as proposed (levels Spark/Rising/Flow/Surge/Apex; five persona taglines; certificate keeps the numeric score).
+
+- **Achievement levels** (`lib/achievements`, unit-tested incl. a property test that no score ever yields fewer than two stars): display-only mapping, engines untouched. `AchievementStars` component; Apex's fifth star glows.
+- **Persona taglines** (`lib/persona-content`), founder-approved copy.
+- **The Reveal Sequence**: full-screen anticipation overlay on submit ("Reading your 8 choices… → Mapping your work style… → Ready.") with a 2.4s hold _before_ the action fires (the redirect would otherwise cut the beat short). Reduced-motion collapses to fades.
+- **Results hero v2** (10-Second Rule — exactly six elements): large artwork · persona name · stars + level · tagline · ⚡ Superpower badge (top measured competency) · Share (native share sheet w/ copy fallback, shares the verify URL) + Continue. All analytics below a "Your full profile" divider; radar collapsed into `<details>`; numeric score demoted to a single detail line; "Moderate" confidence removed from the hero (low-confidence shows the invitation copy in detail).
+- **Language sweep** (No Shame): "Blind spots"→"Your next unlocks"; "None identified"→"Still emerging — your next session reveals them"; retake lock→"Your next evolution unlocks {date}"; recommendations→"Three moves for this week"; runner submit→"Reveal my work style"; landing CTA→"Reveal my AI work style".
+- Verified live: full run — new submit copy, reveal overlay, staged hero (artwork → name → ★★★ Rising → tagline → superpower), score absent from hero and present only in the detail line. 50 tests green.
+- Remaining phases: B (runner milestone encouragements, progress spring), C (share card v2 + story-ratio image + sealed-card claim gate), D (dashboard identity home, certificate/email warmth).
+
+---
+
 ## 2026-07-16 — Founder Decision 20 (Session 7): emotional UX pivot
 
 **AIQ is an identity platform, not an assessment platform.** New source-of-truth [UX_PHILOSOPHY.md](./UX_PHILOSOPHY.md): the Smile Rule (≥3 smiles per assessment), the Screenshot Test, the 10-Second Rule, the No Shame Rule; achievements replace visible raw scores; sharing is a first-class feature; reduce reading everywhere. Architecture, engines, and database are explicitly frozen — presentation layer only. Screen-by-screen redesign proposal in [UX_REVIEW.md](./UX_REVIEW.md), awaiting founder approval (level names, persona taglines, certificate-score question).

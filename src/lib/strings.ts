@@ -13,7 +13,7 @@ export const strings = {
     heroTitle: "Discover how you really work with AI",
     heroSubtitle:
       "A 3-minute behavioral assessment that reveals your AI work style — not how much jargon you know.",
-    cta: "Start the assessment",
+    cta: "Reveal my AI work style",
     ctaSecondary: "Sign in",
     noSignupNote: "No account needed to start.",
   },
@@ -44,9 +44,9 @@ export const strings = {
     currentProfile: "Your current profile",
     viewResults: "View full results",
     history: "Progress over time",
-    historyHint: "Your newest result is your profile. Retake every 30 days.",
+    historyHint: "Your newest result is your profile.",
     retakeAction: "Retake the assessment",
-    retakeLockedPrefix: "Next retake available",
+    retakeLockedPrefix: "Your next evolution unlocks",
   },
   assessment: {
     introNote:
@@ -57,14 +57,22 @@ export const strings = {
   runner: {
     back: "Back",
     next: "Next",
-    submit: "See my results",
+    submit: "Reveal my work style",
     answered: "answered",
     progressLabel: "Assessment progress",
     keyHint: "Press 1–4 to answer · arrows to navigate",
   },
+  reveal: {
+    stages: ["Reading your 8 choices…", "Mapping your work style…", "Ready."],
+  },
+  share: {
+    action: "Share my work style",
+    copied: "Link copied — paste it anywhere.",
+    message: "I discovered my AI work style — I'm an {persona}. What's yours?",
+  },
   retake: {
     lockedTitle: "You've completed this assessment",
-    lockedBody: "Retake available on",
+    lockedBody: "Your next evolution unlocks",
     viewResults: "View your latest results",
   },
   claim: {
@@ -77,7 +85,7 @@ export const strings = {
     continueSubtitle: "Your assessment is complete.",
   },
   recommendations: {
-    title: "Your three recommended actions",
+    title: "Three moves for this week",
     generating: "Personalizing your recommendations…",
     unavailable:
       "Recommendations aren't available for this result right now. Check back later.",
@@ -106,15 +114,21 @@ export const strings = {
   },
   results: {
     title: "Your results",
+    superpower: "Superpower",
+    continue: "See your full profile",
+    fullProfile: "Your full profile",
+    scoreDetail: "Overall score",
+    radarToggle: "Competency radar",
     overall: "Overall score",
     persona: "Your AI work style",
     competencies: "Competency profile",
     strengths: "Strengths",
-    blindSpots: "Blind spots",
+    blindSpots: "Your next unlocks",
     confidence: "Profile confidence",
-    confidenceLow: "We need more information to build an accurate profile.",
+    confidenceLow:
+      "8 scenarios sketch your outline — your next session sharpens it.",
     notMeasured: "Not measured",
-    noneYet: "None identified in this session.",
+    noneYet: "Still emerging — your next session reveals them.",
   },
   admin: {
     title: "Admin",
