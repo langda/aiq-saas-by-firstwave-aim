@@ -14,7 +14,14 @@ import { strings } from "@/lib/strings";
 
 export const metadata: Metadata = { title: strings.auth.loginTitle };
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  const { next } = await searchParams;
+  // The action re-validates this server-side (relative paths only).
+  const hidden = next ? { next } : undefined;
   return (
     <Card>
       <CardHeader>
@@ -24,6 +31,7 @@ export default function LoginPage() {
       <CardContent className="flex flex-col gap-4">
         <AuthForm
           action={login}
+          hidden={hidden}
           submitLabel={strings.auth.loginAction}
           fields={[
             {

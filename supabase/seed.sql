@@ -236,3 +236,31 @@ select 'f1000000-0000-4000-8000-000000000001', id,
 from public.questions
 where id::text like 'd1000000%'
 on conflict do nothing;
+
+-- ---------- recommendation templates (static fallback library, §6) ----------
+insert into public.recommendation_templates (competency_id, title, why, how) values
+  ('c1000000-0000-4000-8000-000000000001', 'Run one deliberate experiment this week',
+   'Curiosity is the entry point to every other AI skill — profiles like yours grow fastest by widening what they try, not perfecting what they know.',
+   'Pick one task you always do the same way and give an AI tool fifteen minutes to attack it differently. Keep what works, note what fails.'),
+  ('c1000000-0000-4000-8000-000000000002', 'Decompose one stuck problem before delegating it',
+   'AI multiplies problem-solving when work arrives in well-shaped pieces — whole problems pasted wholesale produce whole disappointments.',
+   'Take a task that stalled recently, split it into three smaller questions, and run each through your AI tool separately. Compare against the one-shot answer.'),
+  ('c1000000-0000-4000-8000-000000000003', 'Match your verification to the stakes',
+   'Trusting AI output blindly and re-checking everything are both expensive; the skill is knowing which claims deserve scrutiny.',
+   'On your next AI-assisted deliverable, mark the two claims that would hurt most if wrong and verify only those against a source. Time how little it costs.'),
+  ('c1000000-0000-4000-8000-000000000004', 'Close the loop on one failed prompt',
+   'Learning agility with AI means each interaction changes the next one — the fastest learners study their misses, not their hits.',
+   'Find a recent AI answer you discarded. Ask the tool why it might have missed, rephrase once with that insight, and keep the improved prompt.'),
+  ('c1000000-0000-4000-8000-000000000005', 'Reclaim one recurring hour',
+   'Efficiency gains compound only when repetitive work is systematically routed to AI instead of heroically absorbed.',
+   'List your three most repetitive tasks this week, pick the most robotic one, and build a reusable prompt that does the first 80% of it.'),
+  ('c1000000-0000-4000-8000-000000000006', 'Turn your best one-off into a workflow',
+   'The difference between using AI and building with it is repeatability — a prompt that worked once is an asset only when it is written down.',
+   'Take the best AI result you got this month, save the exact prompt with a two-line usage note, and share it where a teammate can find it.'),
+  ('c1000000-0000-4000-8000-000000000007', 'Write your own two-line AI boundary',
+   'Judgment is what makes every other AI habit safe to scale — knowing what never goes into a model is a career-grade skill.',
+   'Draft two personal rules: one for data you will never paste into AI, one for outputs you will never ship unreviewed. Put them next to your monitor.'),
+  ('c1000000-0000-4000-8000-000000000008', 'Map one process, not one task',
+   'Vision means seeing where AI changes the economics of a whole workflow rather than shaving minutes off a single step.',
+   'Sketch the five steps of one team process end-to-end and mark where AI could remove a handoff entirely. Share the sketch with one colleague.')
+on conflict (competency_id) do nothing;

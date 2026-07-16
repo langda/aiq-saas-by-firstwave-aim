@@ -14,6 +14,9 @@ const serverSchema = z.object({
   EMAIL_FROM: z.string().min(3).optional(),
   /** Public origin for links in emails, e.g. https://aiq.example.com */
   APP_URL: z.string().url().optional(),
+  /** OpenAI (Decision 10: default AI provider). Absent → static fallback only. */
+  OPENAI_API_KEY: z.string().min(1).optional(),
+  OPENAI_MODEL: z.string().min(1).default("gpt-4o-mini"),
 });
 
 export const serverEnv = serverSchema.parse({
@@ -21,4 +24,6 @@ export const serverEnv = serverSchema.parse({
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   EMAIL_FROM: process.env.EMAIL_FROM,
   APP_URL: process.env.APP_URL,
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  OPENAI_MODEL: process.env.OPENAI_MODEL,
 });

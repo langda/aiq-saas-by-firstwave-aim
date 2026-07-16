@@ -4,6 +4,19 @@ Decisions recorded here are product source of truth, alongside `docs/00_PROJECT/
 
 ---
 
+## 2026-07-16 — Milestone 5: AI recommendations (Session 7)
+
+The launch line is complete: every result now shows three tailored actions (QUESTION_FRAMEWORK requirement), with AI outage invisible by design.
+
+- **`lib/ai` adapter** (Decision 10): OpenAI behind a provider-agnostic interface (plain fetch, JSON mode, 20s timeout, `OPENAI_MODEL` env, default gpt-4o-mini). Structured output is Zod-validated — unparseable model output is discarded, never rendered. Prompt versioned in code (`recommendations.v1`); model + prompt version recorded on every generation. The AI sees only the profile summary — never raw responses or signal weights (ASSESSMENT_MODEL §2 invariant 3).
+- **Static fallback library**: new `recommendation_templates` table (admin-editable, competency-keyed, 8 authored actions seeded) + pure `composeFallback` (blind spots first, then lowest scores; unit-tested). Order of authority per ASSESSMENT_MODEL §6: AI personalizes, the library is the guaranteed floor.
+- **Async generation**: pending row inserted at submit; generation runs post-response via Next `after()` — results render instantly, the panel polls (12 × 2.5s) until actions land, then a graceful unavailable state.
+- Also fixed in passing: `/login?next=…` was dropped by the login page (users signing in to attach an anonymous result were stranded on the dashboard) — hidden field now forwards it; the action still validates relative-paths-only.
+- Verified live: full run scored, **gpt-4o-mini generated 3 personalized actions (prompt v1) shown on results**; the run also exercised the **cross-account claim** end-to-end for the first time (anonymous session re-parented to an existing account via `claim_session`). Migration + template seed applied to the cloud DB. Prompt-tuning note: the model occasionally says "your low X" — softer than prohibited remediation language but worth a v2 pass with real user feedback.
+- Deployment note: `OPENAI_API_KEY` must be added to Vercel env for production generation; without it, production serves static-fallback recommendations (by design).
+
+---
+
 ## 2026-07-15 — Founder Decisions (Session 6): artwork, email, GitHub
 
 17. **Persona artwork v1** — five original abstract SVG marks (`public/personas/*.svg`), one visual metaphor per work style (Explorer: uneven discovery burst · Assistant User: prompt-and-check handoff · AI Collaborator: interlocking iteration loops · AI Builder: blocks locking into structure · AI Architect: designed network). Consistent rounded-square + gradient system on the token palette. Wired into results hero, verify page, and seed/DB `artwork_url`.

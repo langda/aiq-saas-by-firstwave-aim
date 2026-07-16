@@ -76,6 +76,14 @@ export const strings = {
     continueTitle: "Welcome back",
     continueSubtitle: "Your assessment is complete.",
   },
+  recommendations: {
+    title: "Your three recommended actions",
+    generating: "Personalizing your recommendations…",
+    unavailable:
+      "Recommendations aren't available for this result right now. Check back later.",
+    whyLabel: "Why this matters for you",
+    howLabel: "How to start",
+  },
   certificate: {
     sectionTitle: "Your certificate",
     download: "Download certificate (PDF)",

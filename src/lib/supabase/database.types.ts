@@ -144,6 +144,27 @@ export type Database = {
         | "scoring_config_id"
         | "scoring_snapshot"
       >;
+      ai_recommendations: Table<
+        {
+          id: string;
+          result_id: string;
+          status: "pending" | "generated" | "failed" | "reviewed";
+          content: Json | null;
+          model: string | null;
+          prompt_version: string | null;
+        },
+        "result_id"
+      >;
+      recommendation_templates: Table<
+        {
+          id: string;
+          competency_id: string;
+          title: string;
+          why: string;
+          how: string;
+        },
+        "competency_id" | "title" | "why" | "how"
+      >;
       certificates: Table<
         {
           id: string;

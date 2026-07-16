@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CertificateActions } from "@/features/certificates/components/certificate-actions";
 import * as certificatesDb from "@/features/certificates/server/db";
+import { RecommendationsPanel } from "@/features/recommendations/components/recommendations-panel";
+import * as recommendations from "@/features/recommendations/server/service";
 import { CompetencyRadar } from "@/features/results/components/competency-radar";
 import { Reveal } from "@/features/results/components/reveal";
 import * as db from "@/features/results/server/db";
@@ -31,11 +33,13 @@ export default async function ResultsPage({
   const result = await db.getResultBySession(sessionId);
   if (!result) notFound();
 
-  const [persona, competencies, certificate] = await Promise.all([
-    db.getPersona(result.persona_id),
-    db.getCompetencyNames(),
-    certificatesDb.getCertificateForSession(sessionId),
-  ]);
+  const [persona, competencies, certificate, recommendation] =
+    await Promise.all([
+      db.getPersona(result.persona_id),
+      db.getCompetencyNames(),
+      certificatesDb.getCertificateForSession(sessionId),
+      recommendations.getRecommendationsForSession(sessionId),
+    ]);
 
   const scores = competencyScoresSchema.parse(result.competency_scores);
   const confidence = confidenceSchema.parse(result.confidence);
@@ -171,6 +175,20 @@ export default async function ResultsPage({
                 </Badge>
               ))
             )}
+          </CardContent>
+        </Card>
+      </Reveal>
+
+      <Reveal delay={0.26}>
+        <Card>
+          <CardHeader>
+            <CardTitle>{strings.recommendations.title}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <RecommendationsPanel
+              status={recommendation.status}
+              actions={recommendation.actions}
+            />
           </CardContent>
         </Card>
       </Reveal>

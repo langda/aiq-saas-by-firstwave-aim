@@ -22,6 +22,8 @@ type AuthFormProps = {
   fields: Field[];
   submitLabel: string;
   successMessage?: string;
+  /** Extra hidden values forwarded to the action (e.g. post-auth destination). */
+  hidden?: Record<string, string>;
 };
 
 export function AuthForm({
@@ -29,11 +31,15 @@ export function AuthForm({
   fields,
   submitLabel,
   successMessage,
+  hidden,
 }: AuthFormProps) {
   const [state, formAction, pending] = useActionState(action, null);
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
+      {Object.entries(hidden ?? {}).map(([name, value]) => (
+        <input key={name} type="hidden" name={name} value={value} />
+      ))}
       {fields.map((field) => (
         <div key={field.name} className="flex flex-col gap-2">
           <Label htmlFor={field.name}>{field.label}</Label>
