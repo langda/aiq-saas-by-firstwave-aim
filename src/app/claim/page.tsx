@@ -50,7 +50,19 @@ export default async function ClaimPage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center p-6">
+    <main className="flex min-h-dvh flex-col items-center justify-center gap-6 p-6">
+      {/* The sealed card (UX_REVIEW §5): the result exists — this form is the
+          key, not the toll. Decision 1 forbids revealing it before auth. */}
+      <div
+        aria-hidden
+        className="from-primary via-primary/70 relative flex h-40 w-64 items-center justify-center rounded-2xl bg-gradient-to-br to-violet-500 shadow-xl"
+      >
+        <div className="absolute inset-0 animate-pulse rounded-2xl bg-white/10" />
+        <span className="text-5xl font-semibold text-white/90">?</span>
+        <span className="absolute bottom-3 text-xs font-medium tracking-widest text-white/70 uppercase">
+          {strings.brand.name}
+        </span>
+      </div>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>{strings.claim.title}</CardTitle>

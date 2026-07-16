@@ -2,6 +2,7 @@ import "server-only";
 
 import { canViewOwnResults } from "@/core/authz";
 import type { AuthContext } from "@/core/types";
+import { getAchievement, type AchievementLevel } from "@/lib/achievements";
 import { generatePublicCode } from "@/lib/ids";
 
 import * as db from "./db";
@@ -53,6 +54,8 @@ export type PublicVerification = {
   holderName: string | null;
   personaName: string | null;
   personaArtworkUrl: string | null;
+  /** Coarse level only (stars + name) — never the raw score (Decision 6). */
+  achievement: AchievementLevel;
   assessmentTitle: string;
   issuedAt: string;
 };
@@ -69,6 +72,7 @@ export async function getPublicVerification(
     holderName: record.holderName,
     personaName: record.personaName,
     personaArtworkUrl: record.personaArtworkUrl,
+    achievement: getAchievement(record.overallScore),
     assessmentTitle: record.assessmentTitle,
     issuedAt: record.issuedAt,
   };

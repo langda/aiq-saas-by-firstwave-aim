@@ -15,3 +15,32 @@ export const personaTaglines: Record<string, string> = {
 export function getPersonaTagline(slug: string | undefined): string | null {
   return slug ? (personaTaglines[slug] ?? null) : null;
 }
+
+/**
+ * Static showcase for public marketing surfaces ("Which one are you?").
+ * Deliberately not a DB read: the landing page is static and unauthenticated;
+ * these five are seed-stable and their artwork ships with the app.
+ */
+export const personaShowcase = [
+  { slug: "explorer", name: "Explorer", artwork: "/personas/explorer.svg" },
+  {
+    slug: "assistant-user",
+    name: "Assistant User",
+    artwork: "/personas/assistant-user.svg",
+  },
+  {
+    slug: "ai-collaborator",
+    name: "AI Collaborator",
+    artwork: "/personas/ai-collaborator.svg",
+  },
+  {
+    slug: "ai-builder",
+    name: "AI Builder",
+    artwork: "/personas/ai-builder.svg",
+  },
+  {
+    slug: "ai-architect",
+    name: "AI Architect",
+    artwork: "/personas/ai-architect.svg",
+  },
+] as const;

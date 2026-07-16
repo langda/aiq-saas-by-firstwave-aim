@@ -41,14 +41,19 @@ export async function listResultsForUser() {
   return data;
 }
 
-export async function getPersonaNames() {
+export async function getPersonaMeta() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("personas")
-    .select("id, name")
+    .select("id, name, artwork_url")
     .order("display_order");
   if (error) throw error;
-  return new Map((data ?? []).map((p) => [p.id, p.name]));
+  return new Map(
+    (data ?? []).map((p) => [
+      p.id,
+      { name: p.name, artworkUrl: p.artwork_url },
+    ]),
+  );
 }
 
 export async function getCompetencyNames() {

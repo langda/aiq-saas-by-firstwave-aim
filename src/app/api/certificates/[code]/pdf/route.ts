@@ -4,6 +4,7 @@ import QRCode from "qrcode";
 
 import { CertificateDocument } from "@/features/certificates/server/pdf";
 import * as certificates from "@/features/certificates/server/service";
+import { getAchievement } from "@/lib/achievements";
 import { getAuthContext } from "@/lib/auth/context";
 
 /**
@@ -36,6 +37,7 @@ export async function GET(
       personaName: record.personaName ?? "—",
       personaDescription: record.personaDescription ?? "",
       overallScore: record.overallScore,
+      achievement: getAchievement(record.overallScore),
       assessmentTitle: record.assessmentTitle,
       issuedAt: record.issuedAt,
       verifyUrl,

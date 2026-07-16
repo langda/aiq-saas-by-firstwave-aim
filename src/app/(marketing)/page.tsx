@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { PersonaShowcase } from "@/components/shared/persona-showcase";
 import { strings } from "@/lib/strings";
 
 export default function LandingPage() {
@@ -23,6 +24,9 @@ export default function LandingPage() {
         <p className="text-muted-foreground text-sm">
           {strings.landing.noSignupNote}
         </p>
+      </div>
+      <div className="mt-10">
+        <PersonaShowcase />
       </div>
     </section>
   );

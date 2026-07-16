@@ -4,10 +4,14 @@ import {
   Document,
   Image,
   Page,
+  Path,
   StyleSheet,
+  Svg,
   Text,
   View,
 } from "@react-pdf/renderer";
+
+import type { AchievementLevel } from "@/lib/achievements";
 
 /**
  * Certificate PDF template (Decision 6 holder view: name, persona, overall
@@ -54,7 +58,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 1.5,
   },
-  score: { fontSize: 13, marginTop: 20 },
+  score: { fontSize: 13, marginTop: 16 },
+  levelRow: {
+    marginTop: 18,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  levelName: { fontSize: 14, fontFamily: "Helvetica-Bold" },
   footer: {
     marginTop: "auto",
     display: "flex",
@@ -66,11 +78,27 @@ const styles = StyleSheet.create({
   qr: { width: 76, height: 76 },
 });
 
+const STAR_PATH =
+  "M12 2l2.9 6.26 6.6.7-4.9 4.5 1.35 6.54L12 16.9 6.05 20l1.35-6.54-4.9-4.5 6.6-.7L12 2z";
+
+function StarRow({ filled }: { filled: number }) {
+  return (
+    <View style={{ display: "flex", flexDirection: "row", gap: 3 }}>
+      {[0, 1, 2, 3, 4].map((index) => (
+        <Svg key={index} width={16} height={16} viewBox="0 0 24 24">
+          <Path d={STAR_PATH} fill={index < filled ? "#f59e0b" : "#e5e7eb"} />
+        </Svg>
+      ))}
+    </View>
+  );
+}
+
 export function CertificateDocument(props: {
   holderName: string;
   personaName: string;
   personaDescription: string;
   overallScore: number;
+  achievement: AchievementLevel;
   assessmentTitle: string;
   issuedAt: string;
   verifyUrl: string;
@@ -94,6 +122,10 @@ export function CertificateDocument(props: {
             <Text style={styles.personaDescription}>
               {props.personaDescription}
             </Text>
+            <View style={styles.levelRow}>
+              <StarRow filled={props.achievement.stars} />
+              <Text style={styles.levelName}>{props.achievement.name}</Text>
+            </View>
             <Text style={styles.score}>
               Overall score {props.overallScore} / 100 · {props.assessmentTitle}
             </Text>

@@ -4,6 +4,15 @@ Decisions recorded here are product source of truth, alongside `docs/00_PROJECT/
 
 ---
 
+## 2026-07-16 — UX Phases B–D: runner delight, share loop v2, identity home (Session 7)
+
+- **Phase B — runner**: milestone encouragements fade in at Q3/Q5/Q8 ("Interesting choices… / Your style is taking shape. / Last one — your reveal is next."), progress bar now spring-animated; intro copy rewritten ("8 real-work moments… let's find it", button "Let's find out") with a compact persona strip.
+- **Phase C — share loop**: landing gets the **"Which one are you?"** five-persona strip (static `personaShowcase` — no DB read on public pages); claim gate reframed as the **sealed card** (glowing face-down result; "Your work style is in."); **share card v2** (`ShareCard`, one JSX tree for both ratios): indigo-violet gradient, holder, persona huge, gold SVG stars + level, viral hook line — zero analytics; **story-ratio image** (1080×1920) at `/api/share/story/[code]` linked from certificate actions; verify page shows achievement stars. `PublicVerification` now carries the coarse achievement level (never the raw score).
+- **Phase D — identity home**: dashboard hero = artwork + persona + stars (raw score removed from all dashboard surfaces); history is **"Your journey"** — artwork-thumbnailed timeline showing level names instead of numbers. Certificate PDF gains the star row + level (score retained per Decision 6). Certificate email v2: subject "You're an {persona} — your profile is ready", tagline-led body.
+- Verified live: landing strip, OG card (★★★ Rising / AI Collaborator render confirmed), story image 200 png, dashboard identity home. Runner milestones typechecked/built (visual check pending next fresh session — all test users cooldown-locked). 50 tests green.
+
+---
+
 ## 2026-07-16 — UX Phase A: the reveal & hero v2 (Session 7)
 
 Founder approved UX_REVIEW as proposed (levels Spark/Rising/Flow/Surge/Apex; five persona taglines; certificate keeps the numeric score).

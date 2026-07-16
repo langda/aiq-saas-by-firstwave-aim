@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import * as certificates from "@/features/certificates/server/service";
+import { AchievementStars } from "@/features/results/components/achievement-stars";
 import { strings } from "@/lib/strings";
 
 /**
@@ -89,6 +90,9 @@ export default async function VerifyPage({
                 <p className="text-primary mt-3 text-lg font-medium">
                   {verification.personaName}
                 </p>
+                <div className="mt-3 flex justify-center">
+                  <AchievementStars level={verification.achievement} />
+                </div>
               </div>
               <dl className="text-sm">
                 <div className="flex justify-between border-b py-2">

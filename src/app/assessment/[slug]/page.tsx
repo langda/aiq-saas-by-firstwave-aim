@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { PersonaShowcase } from "@/components/shared/persona-showcase";
 import { AssessmentRunner } from "@/features/assessment/components/assessment-runner";
 import { startAssessment } from "@/features/assessment/server/actions";
 import * as assessmentService from "@/features/assessment/server/service";
@@ -78,8 +79,12 @@ export default async function AssessmentPage({
           <h1 className="text-3xl font-semibold tracking-tight text-balance">
             {strings.landing.heroTitle}
           </h1>
-          <p className="text-muted-foreground">
+          <PersonaShowcase compact />
+          <p className="text-muted-foreground max-w-md">
             {strings.assessment.introNote}
+          </p>
+          <p className="text-muted-foreground text-sm">
+            {strings.assessment.introMeta}
           </p>
           {error === "start" && (
             <p role="alert" className="text-destructive text-sm">

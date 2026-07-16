@@ -44,6 +44,7 @@ export function AssessmentRunner({ state }: { state: RunnerState }) {
   const question = questions[index];
   const allAnswered = questions.every((q) => answers[q.id]);
   const progress = Object.keys(answers).length / questions.length;
+  const milestone = s.milestones[index + 1] ?? null;
 
   function goTo(next: number) {
     setDirection(next > index ? 1 : -1);
@@ -130,7 +131,11 @@ export function AssessmentRunner({ state }: { state: RunnerState }) {
             className="bg-primary h-full rounded-full"
             initial={false}
             animate={{ width: `${Math.max(4, progress * 100)}%` }}
-            transition={{ duration: reduceMotion ? 0 : 0.4, ease: "easeOut" }}
+            transition={
+              reduceMotion
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 210, damping: 24 }
+            }
           />
         </div>
         <p
@@ -140,6 +145,23 @@ export function AssessmentRunner({ state }: { state: RunnerState }) {
           {index + 1} / {questions.length}
         </p>
       </div>
+
+      {/* Milestone encouragement (Smile Rule): anticipation, not cheerleading */}
+      <AnimatePresence>
+        {milestone && (
+          <motion.p
+            key={milestone}
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="text-primary -mt-4 text-sm font-medium"
+            aria-live="polite"
+          >
+            {milestone}
+          </motion.p>
+        )}
+      </AnimatePresence>
 
       {/* Question */}
       <div className="relative flex-1">

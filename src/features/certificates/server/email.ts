@@ -1,6 +1,8 @@
 import "server-only";
 
+import { getAchievement } from "@/lib/achievements";
 import { isEmailConfigured, sendEmail } from "@/lib/email";
+import { getPersonaTagline } from "@/lib/persona-content";
 import { serverEnv } from "@/lib/env.server";
 
 import * as db from "./db";
@@ -35,14 +37,16 @@ export async function sendCertificateIssuedEmail(
   const origin = serverEnv.APP_URL ?? "http://localhost:3000";
   const verifyUrl = `${origin}/verify/${publicCode}`;
 
+  const tagline = getPersonaTagline(record.personaSlug ?? undefined);
+  const achievement = getAchievement(record.overallScore);
   await sendEmail({
     to: profile.email,
-    subject: `Your AIQ certificate — ${record.personaName ?? "your AI work style"}`,
+    subject: `You're an ${record.personaName ?? "AIQ original"} — your profile is ready`,
     html: `
       <div style="font-family: -apple-system, 'Segoe UI', sans-serif; max-width: 480px; margin: 0 auto; color: #171717;">
         <p style="color: #4f46e5; font-weight: 700; font-size: 18px;">AIQ</p>
-        <h1 style="font-size: 22px;">Your certificate is ready${record.holderName ? `, ${record.holderName}` : ""}</h1>
-        <p>Your AI work style: <strong>${record.personaName ?? "—"}</strong>.</p>
+        <h1 style="font-size: 24px;">${record.personaName ?? "Your AI work style"} · ${achievement.name}</h1>
+        ${tagline ? `<p style="font-size: 17px;">${tagline}</p>` : ""}
         <p>Share your verification link — it shows your work style and date, never your scores:</p>
         <p><a href="${verifyUrl}" style="color: #4f46e5;">${verifyUrl}</a></p>
         <p style="color: #6b7280; font-size: 13px;">Download the full PDF certificate from your results page.</p>

@@ -29,6 +29,19 @@ export function CertificateActions({ code }: { code: string }) {
         <Button variant="outline" onClick={copyLink}>
           {copied ? s.copied : s.copyLink}
         </Button>
+        <Button
+          variant="outline"
+          nativeButton={false}
+          render={
+            <a
+              href={`/api/share/story/${code}`}
+              target="_blank"
+              rel="noreferrer"
+            />
+          }
+        >
+          {s.storyImage}
+        </Button>
       </div>
       <p className="text-muted-foreground text-sm">{s.shareHint}</p>
     </div>

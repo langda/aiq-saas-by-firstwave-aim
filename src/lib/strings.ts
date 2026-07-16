@@ -16,6 +16,7 @@ export const strings = {
     cta: "Reveal my AI work style",
     ctaSecondary: "Sign in",
     noSignupNote: "No account needed to start.",
+    whichOne: "Which one are you?",
   },
   auth: {
     loginTitle: "Welcome back",
@@ -43,20 +44,26 @@ export const strings = {
     emptyAction: "Start the assessment",
     currentProfile: "Your current profile",
     viewResults: "View full results",
-    history: "Progress over time",
+    history: "Your journey",
     historyHint: "Your newest result is your profile.",
     retakeAction: "Retake the assessment",
     retakeLockedPrefix: "Your next evolution unlocks",
   },
   assessment: {
     introNote:
-      "No account needed. Takes about 3 minutes. No right answers — answer honestly.",
-    start: "Begin",
+      "8 real-work moments. No right answers. One of five work styles is yours — let's find it.",
+    introMeta: "3 minutes · no account needed",
+    start: "Let's find out",
     startError: "Could not start the assessment. Please try again.",
   },
   runner: {
     back: "Back",
     next: "Next",
+    milestones: {
+      3: "Interesting choices\u2026",
+      5: "Your style is taking shape.",
+      8: "Last one \u2014 your reveal is next.",
+    } as Record<number, string>,
     submit: "Reveal my work style",
     answered: "answered",
     progressLabel: "Assessment progress",
@@ -76,8 +83,9 @@ export const strings = {
     viewResults: "View your latest results",
   },
   claim: {
-    title: "Your results are ready",
-    subtitle: "Create your free account to see your AI work style profile.",
+    title: "Your work style is in.",
+    subtitle:
+      "One step from the reveal \u2014 create your free account to open it.",
     convertAction: "Create account & see results",
     haveAccount: "Already have an account? Sign in to attach these results",
     continueAction: "View my results",
@@ -97,6 +105,7 @@ export const strings = {
     download: "Download certificate (PDF)",
     copyLink: "Copy verification link",
     copied: "Link copied.",
+    storyImage: "Story image",
     shareHint:
       "Anyone with the link sees your work style and date — never your scores.",
   },
