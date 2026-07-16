@@ -4,6 +4,12 @@ Decisions recorded here are product source of truth, alongside `docs/00_PROJECT/
 
 ---
 
+## 2026-07-16 — Founder Decision 20 (Session 7): emotional UX pivot
+
+**AIQ is an identity platform, not an assessment platform.** New source-of-truth [UX_PHILOSOPHY.md](./UX_PHILOSOPHY.md): the Smile Rule (≥3 smiles per assessment), the Screenshot Test, the 10-Second Rule, the No Shame Rule; achievements replace visible raw scores; sharing is a first-class feature; reduce reading everywhere. Architecture, engines, and database are explicitly frozen — presentation layer only. Screen-by-screen redesign proposal in [UX_REVIEW.md](./UX_REVIEW.md), awaiting founder approval (level names, persona taglines, certificate-score question).
+
+---
+
 ## 2026-07-16 — Milestone 5: AI recommendations (Session 7)
 
 The launch line is complete: every result now shows three tailored actions (QUESTION_FRAMEWORK requirement), with AI outage invisible by design.
