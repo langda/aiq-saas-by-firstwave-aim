@@ -36,7 +36,6 @@ export async function GET(
       holderName: record.holderName ?? "AIQ Participant",
       personaName: record.personaName ?? "—",
       personaDescription: record.personaDescription ?? "",
-      overallScore: record.overallScore,
       achievement: getAchievement(record.overallScore),
       assessmentTitle: record.assessmentTitle,
       issuedAt: record.issuedAt,

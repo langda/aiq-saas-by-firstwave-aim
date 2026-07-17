@@ -97,7 +97,6 @@ export function CertificateDocument(props: {
   holderName: string;
   personaName: string;
   personaDescription: string;
-  overallScore: number;
   achievement: AchievementLevel;
   assessmentTitle: string;
   issuedAt: string;
@@ -126,9 +125,7 @@ export function CertificateDocument(props: {
               <StarRow filled={props.achievement.stars} />
               <Text style={styles.levelName}>{props.achievement.name}</Text>
             </View>
-            <Text style={styles.score}>
-              Overall score {props.overallScore} / 100 · {props.assessmentTitle}
-            </Text>
+            <Text style={styles.score}>{props.assessmentTitle}</Text>
           </View>
 
           <View style={styles.footer}>

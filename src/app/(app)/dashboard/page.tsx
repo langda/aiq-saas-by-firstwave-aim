@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import * as assessmentService from "@/features/assessment/server/service";
 import { AchievementStars } from "@/features/results/components/achievement-stars";
-import { ProgressChart } from "@/features/results/components/progress-chart";
 import * as resultsDb from "@/features/results/server/db";
 import { getAchievement } from "@/lib/achievements";
 import { getAuthContext } from "@/lib/auth/context";
@@ -41,14 +40,6 @@ export default async function DashboardPage() {
   const retakeAt = ctx
     ? await assessmentService.getRetakeGate(ctx, "aiq")
     : null;
-
-  const history = [...results].reverse().map((r) => ({
-    date: new Date(r.created_at).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    }),
-    score: r.overall_score,
-  }));
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
@@ -92,7 +83,6 @@ export default async function DashboardPage() {
           <CardTitle>{s.history}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <ProgressChart data={history} />
           <ul className="flex flex-col divide-y">
             {results.map((result) => {
               const persona = personaMeta.get(result.persona_id);

@@ -4,6 +4,20 @@ Decisions recorded here are product source of truth, alongside `docs/00_PROJECT/
 
 ---
 
+## 2026-07-18 — Decision 21 implemented: the office-worker pivot (Session 8)
+
+Founder approved UX_REVIEW_V2 as recommended. All four flagged calls resolved: (A) scores stay engine-internal; (B) recommendations feature fully removed; (C) certificate drops the /100 (amends Decision 6); (D) questions v2 published, v1 archived.
+
+- **Landing = Concept 1**: "What kind of AI user are you?" · "Find out" · "One of these is you." card strip. The word "assessment" removed from every interactive surface (kept: SEO metadata, admin, formal certificate title).
+- **Questions v2 — all 8 rewritten to office life** ("The 4:50pm email", "The salary spreadsheet", "The wrong summary", …), options in colleague-speech, banned-word sweep of our own content (v1 contained "anonymization", "pipeline"). Signals mirror v1 one-to-one — the engine and scoring balance are unchanged. Old set archived per §4.5; the 9th orphan question archived too. Cloud DB swapped; seed.sql synced.
+- **Runner**: standing "What would you normally do?" prompt under every scenario (Coffee Break Rule as UI); intro → "Just pick what you'd actually do." / "Let's find out".
+- **Result v3 — one phone screen**: artwork · name · stars+level · tagline · Superpower · Share · "Keep it forever". **Removed entirely** (per directive, not hidden): competency bars, radar, score line, Strengths, Next Unlocks, Three Moves. Below the fold: certificate only.
+- **Recommendations feature deleted end-to-end**: `features/recommendations/`, `lib/ai/` (OpenAI adapter + prompts), fallback library, submit-time trigger, OPENAI env vars, and migration 0007 dropping `ai_recommendations` + `recommendation_templates`. Revival path: git history (Milestone 5, commit 6b30a32). BLUEPRINT's "results must be actionable" is consciously deferred to a post-launch growth surface.
+- **Certificate**: /100 removed (stars + level + persona + QR remain). Dashboard: score line chart removed; "Your journey" keeps persona + level timeline.
+- Verified live E2E (fresh user): Concept-1 landing → "Let's find out" → v2 questions with the normally-do prompt → **Q3 milestone message confirmed on screen for the first time** → reveal sequence → one-screen result (AI Builder ★★★ Rising, zero numbers). 46 tests green.
+
+---
+
 ## 2026-07-16 — UX Phases B–D: runner delight, share loop v2, identity home (Session 7)
 
 - **Phase B — runner**: milestone encouragements fade in at Q3/Q5/Q8 ("Interesting choices… / Your style is taking shape. / Last one — your reveal is next."), progress bar now spring-animated; intro copy rewritten ("8 real-work moments… let's find it", button "Let's find out") with a compact persona strip.

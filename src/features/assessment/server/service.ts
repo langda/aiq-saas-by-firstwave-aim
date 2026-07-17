@@ -2,7 +2,6 @@ import "server-only";
 
 import { randomUUID } from "node:crypto";
 
-import { after } from "next/server";
 import { z } from "zod";
 
 import { canTakeAssessment } from "@/core/authz";
@@ -288,17 +287,6 @@ export async function submitSession(
   // Every completion earns a certificate (Decision 6). Issued to the current
   // user id — the claim flow re-parents it if the account changes (§5.2).
   await issueCertificate({ resultId: result.id, userId: ctx.userId });
-
-  // Recommendations generate post-response (ARCHITECTURE §12): the results
-  // page renders instantly; the panel fills in when generation lands.
-  const recommendations =
-    await import("@/features/recommendations/server/service");
-  await recommendations.insertPending(result.id);
-  after(async () => {
-    await recommendations.generateForResult(result.id).catch((error) => {
-      console.error("recommendation generation crashed", error);
-    });
-  });
 
   await db.logEvent({
     type: "assessment_completed",

@@ -186,6 +186,7 @@ export function AssessmentRunner({ state }: { state: RunnerState }) {
               <p className="text-muted-foreground text-lg text-pretty">
                 {question.scenario}
               </p>
+              <p className="text-primary text-sm font-medium">{s.normallyDo}</p>
             </div>
 
             <div

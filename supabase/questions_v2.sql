@@ -1,98 +1,3 @@
--- AIQ seed: taxonomy, scoring config v1, the free assessment, 8 questions.
--- Fixed UUIDs so seed is idempotent and content is referenceable.
--- Question authoring follows ASSESSMENT_MODEL.md §9 (signal profiles, not
--- right answers; style parity; every option defensible).
-
--- ---------- competencies ----------
-insert into public.competencies (id, slug, name, description, display_order) values
-  ('c1000000-0000-4000-8000-000000000001', 'curiosity',        'Curiosity',        'Experiments unprompted; asks what else a tool can do.', 1),
-  ('c1000000-0000-4000-8000-000000000002', 'problem-solving',  'Problem Solving',  'Reframes stuck problems for AI; decomposes before delegating.', 2),
-  ('c1000000-0000-4000-8000-000000000003', 'decision-making',  'Decision Making',  'Verifies proportionally to stakes; owns the outcome.', 3),
-  ('c1000000-0000-4000-8000-000000000004', 'learning-agility', 'Learning Agility', 'Each AI interaction changes the next one.', 4),
-  ('c1000000-0000-4000-8000-000000000005', 'efficiency',       'Efficiency',       'Routes repetitive work to AI; protects deep-work time.', 5),
-  ('c1000000-0000-4000-8000-000000000006', 'workflow-design',  'Workflow Design',  'Builds reusable prompts and flows; documents them for others.', 6),
-  ('c1000000-0000-4000-8000-000000000007', 'judgment',         'Judgment',         'Knows what not to paste into a model; flags AI risk to others.', 7),
-  ('c1000000-0000-4000-8000-000000000008', 'vision',           'Vision',           'Proposes process-level AI change; anticipates skill shifts.', 8)
-on conflict (id) do nothing;
-
--- ---------- traits (ASSESSMENT_MODEL §3.2, v1) ----------
-insert into public.traits (id, competency_id, slug, name, description, display_order) values
-  ('a1000000-0000-4000-8000-000000000101', 'c1000000-0000-4000-8000-000000000001', 'exploration',            'Exploration',            'Tries new tools and features.', 1),
-  ('a1000000-0000-4000-8000-000000000102', 'c1000000-0000-4000-8000-000000000001', 'interrogation',          'Interrogation',          'Probes how and why AI behaves.', 2),
-  ('a1000000-0000-4000-8000-000000000103', 'c1000000-0000-4000-8000-000000000001', 'boundary-testing',       'Boundary-testing',       'Pushes past defaults and templates.', 3),
-  ('a1000000-0000-4000-8000-000000000201', 'c1000000-0000-4000-8000-000000000002', 'decomposition',          'Decomposition',          'Breaks work into AI-suitable pieces.', 1),
-  ('a1000000-0000-4000-8000-000000000202', 'c1000000-0000-4000-8000-000000000002', 'tool-task-fit',          'Tool–task fit',          'Picks the right instrument.', 2),
-  ('a1000000-0000-4000-8000-000000000203', 'c1000000-0000-4000-8000-000000000002', 'iteration',              'Iteration',              'Refines rather than accepts or abandons.', 3),
-  ('a1000000-0000-4000-8000-000000000301', 'c1000000-0000-4000-8000-000000000003', 'verification',           'Verification',           'Checks AI output before acting.', 1),
-  ('a1000000-0000-4000-8000-000000000302', 'c1000000-0000-4000-8000-000000000003', 'ownership',              'Ownership',              'Keeps accountability for AI-assisted decisions.', 2),
-  ('a1000000-0000-4000-8000-000000000303', 'c1000000-0000-4000-8000-000000000003', 'calibration',            'Calibration',            'Matches scrutiny to stakes.', 3),
-  ('a1000000-0000-4000-8000-000000000401', 'c1000000-0000-4000-8000-000000000004', 'feedback-incorporation', 'Feedback incorporation', 'Adjusts approach from results.', 1),
-  ('a1000000-0000-4000-8000-000000000402', 'c1000000-0000-4000-8000-000000000004', 'transfer',               'Transfer',               'Applies AI patterns across contexts.', 2),
-  ('a1000000-0000-4000-8000-000000000403', 'c1000000-0000-4000-8000-000000000004', 'unlearning',             'Unlearning',             'Drops outdated workflows.', 3),
-  ('a1000000-0000-4000-8000-000000000501', 'c1000000-0000-4000-8000-000000000005', 'automation-instinct',    'Automation instinct',    'Spots repetition worth automating.', 1),
-  ('a1000000-0000-4000-8000-000000000502', 'c1000000-0000-4000-8000-000000000005', 'prioritization',         'Prioritization',         'Aims AI at high-value work.', 2),
-  ('a1000000-0000-4000-8000-000000000503', 'c1000000-0000-4000-8000-000000000005', 'effort-calibration',     'Effort calibration',     'Knows when AI is overkill.', 3),
-  ('a1000000-0000-4000-8000-000000000601', 'c1000000-0000-4000-8000-000000000006', 'systematization',        'Systematization',        'Turns one-offs into repeatable flows.', 1),
-  ('a1000000-0000-4000-8000-000000000602', 'c1000000-0000-4000-8000-000000000006', 'delegation-design',      'Delegation design',      'Clear human/AI division of labor.', 2),
-  ('a1000000-0000-4000-8000-000000000603', 'c1000000-0000-4000-8000-000000000006', 'composition',            'Composition',            'Chains steps and tools into pipelines.', 3),
-  ('a1000000-0000-4000-8000-000000000701', 'c1000000-0000-4000-8000-000000000007', 'risk-awareness',         'Risk awareness',         'Data sensitivity, hallucination exposure.', 1),
-  ('a1000000-0000-4000-8000-000000000702', 'c1000000-0000-4000-8000-000000000007', 'ethical-discernment',    'Ethical discernment',    'People-impact of AI use.', 2),
-  ('a1000000-0000-4000-8000-000000000703', 'c1000000-0000-4000-8000-000000000007', 'skepticism-calibration', 'Skepticism calibration', 'Neither naive trust nor reflexive dismissal.', 3),
-  ('a1000000-0000-4000-8000-000000000801', 'c1000000-0000-4000-8000-000000000008', 'opportunity-spotting',   'Opportunity spotting',   'Sees where AI changes the game.', 1),
-  ('a1000000-0000-4000-8000-000000000802', 'c1000000-0000-4000-8000-000000000008', 'strategic-framing',      'Strategic framing',      'Connects AI use to business outcomes.', 2),
-  ('a1000000-0000-4000-8000-000000000803', 'c1000000-0000-4000-8000-000000000008', 'change-advocacy',        'Change advocacy',        'Brings others along.', 3)
-on conflict (id) do nothing;
-
--- ---------- personas ----------
-insert into public.personas (id, slug, name, description, artwork_url, display_order) values
-  ('b1000000-0000-4000-8000-000000000001', 'explorer',        'Explorer',        'Enthusiastic experimenter; tries everything, systematizes little — energy precedes structure.', '/personas/explorer.svg', 1),
-  ('b1000000-0000-4000-8000-000000000002', 'assistant-user',  'Assistant User',  'Practical task-delegator; AI is a competent helper summoned for discrete jobs.', '/personas/assistant-user.svg', 2),
-  ('b1000000-0000-4000-8000-000000000003', 'ai-collaborator', 'AI Collaborator', 'Iterative partner; drafts, critiques, verifies, refines — strong quality instincts.', '/personas/ai-collaborator.svg', 3),
-  ('b1000000-0000-4000-8000-000000000004', 'ai-builder',      'AI Builder',      'Systems constructor; converts discoveries into repeatable workflows the whole team can run.', '/personas/ai-builder.svg', 4),
-  ('b1000000-0000-4000-8000-000000000005', 'ai-architect',    'AI Architect',    'Organizational strategist; designs how groups adopt AI — processes, guardrails, direction.', '/personas/ai-architect.svg', 5)
-on conflict (id) do nothing;
-
--- ---------- scoring config v1 (Decision 15: signatures are config) ----------
-insert into public.scoring_configs (id, version, status, config) values (
-  'f2000000-0000-4000-8000-000000000001', 1, 'active',
-  '{
-    "version": 1,
-    "competencies": ["curiosity","problem-solving","decision-making","learning-agility","efficiency","workflow-design","judgment","vision"],
-    "overall": { "competencyWeights": {} },
-    "strengths": { "count": 3, "minScore": 65 },
-    "blindSpots": { "count": 3, "maxScore": 45 },
-    "personas": {
-      "signatures": [
-        { "persona": "explorer",        "profile": { "curiosity": 1.0, "problem-solving": 0.4, "decision-making": 0.3, "learning-agility": 0.8, "efficiency": 0.3, "workflow-design": 0.2, "judgment": 0.3, "vision": 0.4 } },
-        { "persona": "assistant-user",  "profile": { "curiosity": 0.3, "problem-solving": 0.7, "decision-making": 0.5, "learning-agility": 0.4, "efficiency": 0.8, "workflow-design": 0.3, "judgment": 0.4, "vision": 0.2 } },
-        { "persona": "ai-collaborator", "profile": { "curiosity": 0.6, "problem-solving": 0.7, "decision-making": 0.9, "learning-agility": 0.8, "efficiency": 0.5, "workflow-design": 0.5, "judgment": 1.0, "vision": 0.5 } },
-        { "persona": "ai-builder",      "profile": { "curiosity": 0.6, "problem-solving": 0.8, "decision-making": 0.6, "learning-agility": 0.6, "efficiency": 0.9, "workflow-design": 1.0, "judgment": 0.5, "vision": 0.6 } },
-        { "persona": "ai-architect",    "profile": { "curiosity": 0.6, "problem-solving": 0.6, "decision-making": 0.7, "learning-agility": 0.6, "efficiency": 0.5, "workflow-design": 0.8, "judgment": 0.8, "vision": 1.0 }, "gates": { "overallGte": 60 } }
-      ],
-      "baseline": 0.2,
-      "secondary": { "minAffinity": 0.55, "display": false },
-      "fallback": "explorer"
-    },
-    "confidence": {
-      "weights": { "volume": 1, "consistency": 1, "coverage": 1 },
-      "minSignalsPerCompetency": 2,
-      "targetSignalVolume": 24,
-      "levels": { "high": 0.75, "moderate": 0.45 }
-    }
-  }'::jsonb
-)
-on conflict (id) do nothing;
-
--- ---------- the free assessment (Decision 8: 8 questions) ----------
-insert into public.assessments (id, slug, title, description, question_count, selection_strategy, status, settings) values (
-  'f1000000-0000-4000-8000-000000000001', 'aiq', 'AIQ Work Style Assessment',
-  'Eight everyday work scenarios. There are no right answers — answer honestly.',
-  8, '{"type":"fixed","shuffle":true}'::jsonb, 'published',
-  '{"retakeCooldownDays": 30}'::jsonb
-)
-on conflict (id) do nothing;
-
--- ---------- questions, options, signals ----------
 -- Questions v2 (Decision 21: the office-worker rewrite).
 -- New set published, old set archived — §4.5 immutability preserved.
 -- Signal structure mirrors v1 one-to-one (same competencies and weights per
@@ -235,10 +140,15 @@ insert into public.option_signals (option_id, competency_id, weight) values
   ('e2000000-0000-4000-8000-000000000084', 'c1000000-0000-4000-8000-000000000007', 1.0)
 on conflict (option_id, competency_id) do nothing;
 
-
+-- Point the assessment at v2 and retire v1 (archive, never edit — §4.5).
+delete from public.assessment_questions
+  where assessment_id = 'f1000000-0000-4000-8000-000000000001';
 insert into public.assessment_questions (assessment_id, question_id, position)
 select 'f1000000-0000-4000-8000-000000000001', id,
        row_number() over (order by id)
 from public.questions
 where id::text like 'd2000000%'
 on conflict do nothing;
+
+update public.questions set status = 'archived'
+  where id::text like 'd1000000%' or title = 'The overloaded inbox';

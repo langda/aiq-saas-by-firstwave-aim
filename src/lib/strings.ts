@@ -10,13 +10,13 @@ export const strings = {
     tagline: "AI Work Style & Readiness Assessment",
   },
   landing: {
-    heroTitle: "Discover how you really work with AI",
+    heroTitle: "What kind of AI user are you?",
     heroSubtitle:
-      "A 3-minute behavioral assessment that reveals your AI work style — not how much jargon you know.",
-    cta: "Reveal my AI work style",
+      "Everyone uses AI differently. 8 everyday work moments. 3 minutes. Find out.",
+    cta: "Find out",
     ctaSecondary: "Sign in",
     noSignupNote: "No account needed to start.",
-    whichOne: "Which one are you?",
+    whichOne: "One of these is you.",
   },
   auth: {
     loginTitle: "Welcome back",
@@ -45,22 +45,22 @@ export const strings = {
   },
   dashboard: {
     title: "Dashboard",
-    emptyTitle: "No assessments yet",
-    emptyBody: "Take your first assessment to discover your AI work style.",
-    emptyAction: "Start the assessment",
+    emptyTitle: "Your style is waiting",
+    emptyBody:
+      "Three minutes, eight everyday work moments — find your AI work style.",
+    emptyAction: "Find out",
     currentProfile: "Your current profile",
     viewResults: "View full results",
     history: "Your journey",
     historyHint: "Your newest result is your profile.",
-    retakeAction: "Retake the assessment",
+    retakeAction: "Take it again",
     retakeLockedPrefix: "Your next evolution unlocks",
   },
   assessment: {
-    introNote:
-      "8 real-work moments. No right answers. One of five work styles is yours — let's find it.",
+    introNote: "8 everyday work moments. Just pick what you'd actually do.",
     introMeta: "3 minutes · no account needed",
     start: "Let's find out",
-    startError: "Could not start the assessment. Please try again.",
+    startError: "Something went wrong starting — please try again.",
   },
   runner: {
     back: "Back",
@@ -72,7 +72,8 @@ export const strings = {
     } as Record<number, string>,
     submit: "Reveal my work style",
     answered: "answered",
-    progressLabel: "Assessment progress",
+    normallyDo: "What would you normally do?",
+    progressLabel: "Your progress",
     keyHint: "Press 1–4 to answer · arrows to navigate",
   },
   reveal: {
@@ -81,10 +82,10 @@ export const strings = {
   share: {
     action: "Share my work style",
     copied: "Link copied — paste it anywhere.",
-    message: "I discovered my AI work style — I'm an {persona}. What's yours?",
+    message: "I got {persona}! What kind of AI user are you?",
   },
   retake: {
-    lockedTitle: "You've completed this assessment",
+    lockedTitle: "You've already revealed your style",
     lockedBody: "Your next evolution unlocks",
     viewResults: "View your latest results",
   },
@@ -96,15 +97,7 @@ export const strings = {
     haveAccount: "Already have an account? Sign in to attach these results",
     continueAction: "View my results",
     continueTitle: "Welcome back",
-    continueSubtitle: "Your assessment is complete.",
-  },
-  recommendations: {
-    title: "Three moves for this week",
-    generating: "Personalizing your recommendations…",
-    unavailable:
-      "Recommendations aren't available for this result right now. Check back later.",
-    whyLabel: "Why this matters for you",
-    howLabel: "How to start",
+    continueSubtitle: "Your work style is ready.",
   },
   certificate: {
     sectionTitle: "Your certificate",
@@ -130,20 +123,8 @@ export const strings = {
   results: {
     title: "Your results",
     superpower: "Superpower",
-    continue: "See your full profile",
-    fullProfile: "Your full profile",
-    scoreDetail: "Overall score",
-    radarToggle: "Competency radar",
-    overall: "Overall score",
+    continue: "Keep it forever",
     persona: "Your AI work style",
-    competencies: "Competency profile",
-    strengths: "Strengths",
-    blindSpots: "Your next unlocks",
-    confidence: "Profile confidence",
-    confidenceLow:
-      "8 scenarios sketch your outline — your next session sharpens it.",
-    notMeasured: "Not measured",
-    noneYet: "Still emerging — your next session reveals them.",
   },
   admin: {
     title: "Admin",
