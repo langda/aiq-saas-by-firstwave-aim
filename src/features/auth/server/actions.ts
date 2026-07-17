@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getAuthContext } from "@/lib/auth/context";
@@ -8,7 +8,12 @@ import { err, ok, type Result } from "@/lib/result";
 import { strings } from "@/lib/strings";
 import { createClient } from "@/lib/supabase/server";
 import { CLAIM_COOKIE } from "../claim-cookie";
-import { loginSchema, resetPasswordSchema, signupSchema } from "../schemas";
+import {
+  loginSchema,
+  resetPasswordSchema,
+  signupSchema,
+  updatePasswordSchema,
+} from "../schemas";
 import { claimFromCookie } from "./claim";
 
 /** Only same-site relative paths are honored as post-auth destinations. */
@@ -110,9 +115,35 @@ export async function requestPasswordReset(
   if (!parsed.success) return err("invalid_input", strings.errors.invalidInput);
 
   const supabase = await createClient();
+  const requestHeaders = await headers();
+  const origin =
+    process.env.APP_URL ??
+    `${requestHeaders.get("x-forwarded-proto") ?? "http"}://${requestHeaders.get("host")}`;
   // Deliberately ignore "user not found" — never reveal account existence.
-  await supabase.auth.resetPasswordForEmail(parsed.data.email);
+  await supabase.auth.resetPasswordForEmail(parsed.data.email, {
+    redirectTo: `${origin}/auth/confirm?next=/update-password`,
+  });
   return ok(null);
+}
+
+/** Sets a new password for the recovery session established by /auth/confirm. */
+export async function updatePassword(
+  _prev: Result<null> | null,
+  formData: FormData,
+): Promise<Result<null>> {
+  const parsed = updatePasswordSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return err("invalid_input", strings.errors.invalidInput);
+
+  const ctx = await getAuthContext();
+  if (!ctx) redirect("/login?error=link");
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({
+    password: parsed.data.password,
+  });
+  if (error) return err("internal", strings.errors.genericBody);
+
+  redirect("/dashboard");
 }
 
 export async function signOut(): Promise<void> {

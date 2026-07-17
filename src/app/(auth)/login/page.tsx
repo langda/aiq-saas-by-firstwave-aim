@@ -17,9 +17,9 @@ export const metadata: Metadata = { title: strings.auth.loginTitle };
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; error?: string }>;
 }) {
-  const { next } = await searchParams;
+  const { next, error } = await searchParams;
   // The action re-validates this server-side (relative paths only).
   const hidden = next ? { next } : undefined;
   return (
@@ -29,6 +29,11 @@ export default async function LoginPage({
         <CardDescription>{strings.auth.loginSubtitle}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
+        {error === "link" && (
+          <p role="alert" className="text-destructive text-sm">
+            {strings.auth.linkError}
+          </p>
+        )}
         <AuthForm
           action={login}
           hidden={hidden}
