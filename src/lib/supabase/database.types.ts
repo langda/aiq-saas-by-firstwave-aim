@@ -86,6 +86,7 @@ export type Database = {
         version: number;
         config: Json;
         status: "draft" | "active" | "retired";
+        created_at: string;
       }>;
       assessment_sessions: Table<
         {

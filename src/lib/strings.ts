@@ -133,6 +133,8 @@ export const strings = {
       competencies: "Competencies",
       personas: "Personas",
       assessments: "Assessments",
+      analytics: "Analytics",
+      scoring: "Scoring",
     },
     dashboard: {
       subtitle: "Manage the platform's content — no SQL required.",
@@ -182,6 +184,38 @@ export const strings = {
     assessments: {
       title: "Assessments",
       questionsReady: "published questions",
+    },
+    analytics: {
+      title: "Analytics",
+      started: "Started",
+      completed: "Completed",
+      completionRate: "Completion rate",
+      inProgress: "In progress",
+      personaDistribution: "Work styles",
+      levelDistribution: "Achievement levels",
+      questionStats: "Question quality",
+      answers: "answers",
+      avgTime: "avg",
+    },
+    scoring: {
+      title: "Scoring config",
+      subtitle:
+        "Versions are immutable — changes are new drafts, activation switches the live engine config. Rollback = activate an older version.",
+      versions: "Versions",
+      version: "Version",
+      created: "Created",
+      activate: "Activate",
+      newVersion: "New version (starts from the active config)",
+      editorLabel: "Scoring config JSON",
+      saveDraft: "Validate & save as draft",
+      draftSaved: "Draft saved as",
+    },
+    builder: {
+      title: "Assessment builder",
+      assessmentTitle: "Title",
+      questionCount: "Questions served",
+      cooldown: "Retake cooldown (days)",
+      questionsLegend: "Published questions in this assessment",
     },
   },
   errors: {

@@ -173,6 +173,81 @@ export async function retireQuestion(
   });
 }
 
+// ---------- assessment builder (Milestone 7) ----------
+
+export async function getAssessmentBuilder(ctx: AuthContext, id: string) {
+  assertAdmin(ctx);
+  const [assessment, published, selectedIds] = await Promise.all([
+    db.getAssessment(id),
+    db.listPublishedQuestionRefs(),
+    db.getAssessmentQuestionIds(id),
+  ]);
+  if (!assessment)
+    throw new AuthoringError("not_found", "Assessment not found");
+  return { assessment, published, selectedIds };
+}
+
+/** Update assessment settings + its question set in one save. */
+export async function saveAssessmentBuilder(
+  ctx: AuthContext,
+  input: {
+    id: string;
+    title: string;
+    description: string;
+    questionCount: number;
+    retakeCooldownDays: number;
+    questionIds: string[];
+  },
+): Promise<void> {
+  assertAdmin(ctx);
+  const assessment = await db.getAssessment(input.id);
+  if (!assessment)
+    throw new AuthoringError("not_found", "Assessment not found");
+
+  // Only published questions may be selected.
+  const published = new Set(
+    (await db.listPublishedQuestionRefs()).map((q) => q.id),
+  );
+  for (const questionId of input.questionIds) {
+    if (!published.has(questionId))
+      throw new AuthoringError(
+        "invalid_input",
+        "Only published questions can be part of an assessment.",
+      );
+  }
+  if (
+    assessment.status === "published" &&
+    input.questionIds.length < input.questionCount
+  )
+    throw new AuthoringError(
+      "conflict",
+      `A published assessment needs at least ${input.questionCount} questions selected (has ${input.questionIds.length}). Unpublish it first, or select more.`,
+    );
+
+  const settings = {
+    ...((assessment.settings as Record<string, unknown> | null) ?? {}),
+    retakeCooldownDays: input.retakeCooldownDays,
+  };
+  await db.updateAssessment(input.id, {
+    title: input.title,
+    description: input.description,
+    question_count: input.questionCount,
+    settings,
+  });
+  await db.replaceAssessmentQuestions(input.id, input.questionIds);
+  await auditLog(ctx, {
+    action: "assessment.update",
+    entityType: "assessment",
+    entityId: input.id,
+    diff: {
+      title: input.title,
+      questionCount: input.questionCount,
+      retakeCooldownDays: input.retakeCooldownDays,
+      questions: input.questionIds.length,
+    },
+  });
+}
+
 // ---------- assessment publish/unpublish (Decision 2) ----------
 
 export async function setAssessmentPublished(

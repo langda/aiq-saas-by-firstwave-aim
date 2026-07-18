@@ -4,6 +4,17 @@ Decisions recorded here are product source of truth, alongside `docs/00_PROJECT/
 
 ---
 
+## 2026-07-18 — Milestones 6 & 7: analytics + full admin CMS (Session 8)
+
+- **M6 — `/admin/analytics`**: funnel tiles (started / completed / completion rate / in-progress), work-style and achievement-level distributions, and per-question answer distribution + average time (the item-quality data ASSESSMENT_MODEL's expansion strategy needs). Service-client reads behind `canAccessAdminArea`; JS aggregation now, materialized views when volume demands.
+- **M7 — scoring config editor** (`/admin/scoring`): versions are **immutable** — edits create the next version as a draft, validated by the engine's own Zod schema _plus_ referential checks (persona/competency slugs must exist); activation switches the live config; **rollback = activate an older version**. Persona signatures are now truly admin-editable (Decision 15 fulfilled). Runs through the cookie client so the super_admin RLS policy enforces every operation.
+- **M7 — assessment builder** (`/admin/assessments/[id]`): title, description, questions-served count, retake cooldown, and the published-question set — with a guard that a published assessment can't drop below its question count. All mutations audited.
+- Also fixed: builds no longer depend on Google's CDN — Geist fonts now self-hosted via the `geist` package (a fonts.google.com outage broke a build mid-session).
+- Verified live as super_admin: analytics with real data (12 started / 10 completed / 83%; per-question bars on the v2 set), full scoring cycle **draft v2 → activate → rollback to v1** with three audit entries, builder save confirmed via `assessment.update` audit row.
+- Deferred to Phase 8 (organizations): branding, org dashboards. Trait CRUD still deferred.
+
+---
+
 ## 2026-07-18 — Decision 21 implemented: the office-worker pivot (Session 8)
 
 Founder approved UX_REVIEW_V2 as recommended. All four flagged calls resolved: (A) scores stay engine-internal; (B) recommendations feature fully removed; (C) certificate drops the /100 (amends Decision 6); (D) questions v2 published, v1 archived.

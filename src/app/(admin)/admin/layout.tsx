@@ -10,6 +10,8 @@ const nav = [
   { href: "/admin/competencies", label: strings.admin.nav.competencies },
   { href: "/admin/personas", label: strings.admin.nav.personas },
   { href: "/admin/assessments", label: strings.admin.nav.assessments },
+  { href: "/admin/analytics", label: strings.admin.nav.analytics },
+  { href: "/admin/scoring", label: strings.admin.nav.scoring },
 ];
 
 export default async function AdminLayout({

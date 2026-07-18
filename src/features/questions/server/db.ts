@@ -205,6 +205,77 @@ export async function countPublishedQuestionsInAssessment(
   return (data ?? []).length;
 }
 
+export async function getAssessment(id: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("assessments")
+    .select("id, slug, title, description, question_count, status, settings")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateAssessment(
+  id: string,
+  row: {
+    title: string;
+    description: string;
+    question_count: number;
+    settings: unknown;
+  },
+) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("assessments")
+    .update({ ...row, settings: row.settings as never })
+    .eq("id", id);
+  if (error) throw error;
+}
+
+export async function listPublishedQuestionRefs() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("questions")
+    .select("id, title")
+    .eq("status", "published")
+    .order("title");
+  if (error) throw error;
+  return data;
+}
+
+export async function getAssessmentQuestionIds(assessmentId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("assessment_questions")
+    .select("question_id, position")
+    .eq("assessment_id", assessmentId)
+    .order("position");
+  if (error) throw error;
+  return (data ?? []).map((r) => r.question_id);
+}
+
+export async function replaceAssessmentQuestions(
+  assessmentId: string,
+  questionIds: string[],
+) {
+  const supabase = await createClient();
+  const { error: deleteError } = await supabase
+    .from("assessment_questions")
+    .delete()
+    .eq("assessment_id", assessmentId);
+  if (deleteError) throw deleteError;
+  if (questionIds.length === 0) return;
+  const { error } = await supabase.from("assessment_questions").insert(
+    questionIds.map((questionId, index) => ({
+      assessment_id: assessmentId,
+      question_id: questionId,
+      position: index + 1,
+    })),
+  );
+  if (error) throw error;
+}
+
 export async function setAssessmentStatus(
   id: string,
   status: "draft" | "published",

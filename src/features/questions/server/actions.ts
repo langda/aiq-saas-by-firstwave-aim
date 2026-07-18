@@ -73,6 +73,43 @@ export async function retireQuestion(formData: FormData): Promise<void> {
   revalidatePath("/admin/questions");
 }
 
+export async function saveAssessmentBuilder(
+  _prev: Result<null> | null,
+  formData: FormData,
+): Promise<Result<null>> {
+  const ctx = await getAuthContext();
+  if (!ctx) return err("unauthenticated", strings.errors.genericBody);
+
+  const id = String(formData.get("id"));
+  const questionCount = Number(formData.get("questionCount"));
+  const retakeCooldownDays = Number(formData.get("retakeCooldownDays"));
+  if (
+    !Number.isInteger(questionCount) ||
+    questionCount < 1 ||
+    questionCount > 60 ||
+    !Number.isInteger(retakeCooldownDays) ||
+    retakeCooldownDays < 0 ||
+    retakeCooldownDays > 365
+  )
+    return err("invalid_input", strings.errors.invalidInput);
+
+  try {
+    await service.saveAssessmentBuilder(ctx, {
+      id,
+      title: String(formData.get("title") ?? "").slice(0, 200),
+      description: String(formData.get("description") ?? "").slice(0, 1000),
+      questionCount,
+      retakeCooldownDays,
+      questionIds: formData.getAll("questionIds").map(String),
+    });
+    revalidatePath("/admin/assessments");
+    revalidatePath(`/admin/assessments/${id}`);
+    return ok(null);
+  } catch (error) {
+    return toError(error);
+  }
+}
+
 export async function toggleAssessmentPublished(
   formData: FormData,
 ): Promise<void> {

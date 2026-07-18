@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
@@ -50,7 +51,14 @@ export default async function AssessmentsPage({
         <TableBody>
           {assessments.map((assessment, index) => (
             <TableRow key={assessment.id}>
-              <TableCell>{assessment.title}</TableCell>
+              <TableCell>
+                <Link
+                  href={`/admin/assessments/${assessment.id}`}
+                  className="hover:underline"
+                >
+                  {assessment.title}
+                </Link>
+              </TableCell>
               <TableCell>
                 <Badge
                   variant={
